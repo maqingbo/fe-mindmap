@@ -14,7 +14,7 @@ DOM 与特定的平台、浏览器、语言无关，很多种语言都实现了 
 
 > 不管是 DOM Core 还是 HTML-DOM，我们在使用 JavaScript 的时候要注意浏览器之间的兼容性，因为不同的浏览器对这两类方法和属性的支持可能不一样。
 
-```
+```js
 // 常见的 DOM Core 属性：
 node.childNodes
 node.firstChild
