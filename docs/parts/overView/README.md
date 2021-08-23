@@ -21,7 +21,7 @@ title: 'JS 概览'
 
 > 但是，如果从浏览器的范畴去理解“JavaScript”这个术语，它包含了截然不同的两个方面。一方面是 JavaScript 的核心语言（ECMAScript），另一方面是大量的 Web API 们，包括 DOM（文档对象模型）。 —— [JavaScript 技术概览 - MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/JavaScript_technologies_overview)
 
-![01-01](../Illustrations/01-01.png)
+![01-01](../../Illustrations/01-01.png)
 
 ## Nodejs
 

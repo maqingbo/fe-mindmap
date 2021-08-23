@@ -8,25 +8,22 @@ module.exports = {
   ],
   plugins: ['@vuepress/medium-zoom'],
   themeConfig: {
-    // displayAllHeaders: true,
+    displayAllHeaders: true,
     lastUpdated: '上次更新',
     sidebarDepth: 2,
-    sidebar: {
-      '/parts/': [
-        'OTC',
-        'html',
-        'css',
-        'overView',
-        'ECMA',
-        'jsCore',
-        'DOM',
-        'browser',
-        'http',
-        'engineering',
-        'algorithms',
-        'frame',
-        'safe'
-      ]
-    }
+    sidebar: [
+      { title: 'HTML', children: ['/parts/html/'] },
+      { title: 'CSS', children: ['/parts/css/'] },
+      { title: 'JS 概览', children: ['/parts/overView/'] },
+      { title: 'ECMA Script', children: ['/parts/ECMA/'] },
+      { title: 'JS 核心及原理', children: ['/parts/jsCore/'] },
+      { title: 'DOM', children: ['/parts/DOM/'] },
+      { title: '浏览器', children: ['/parts/browser/'] },
+      { title: 'HTTP', children: ['/parts/http/'] },
+      { title: '前端工程化', children: ['/parts/engineering/'] },
+      { title: '数据结构与算法', children: ['/parts/algorithms/'] },
+      { title: '框架', children: ['/parts/frame/'] },
+      { title: '网站安全', children: ['/parts/safe/'] }
+    ]
   }
 }
