@@ -13,7 +13,7 @@ module.exports = {
     sidebarDepth: 2,
     sidebar: [
       { title: 'HTML', children: ['/parts/html/'] },
-      { title: 'CSS', children: ['/parts/css/'] },
+      { title: 'CSS', children: ['/parts/css/', '/parts/css/zjsj'] },
       { title: 'JS 概览', children: ['/parts/overView/'] },
       { title: 'ECMA Script', children: ['/parts/ECMA/'] },
       { title: 'JS 核心及原理', children: ['/parts/jsCore/'] },

@@ -1,3 +1,3 @@
 ---
-title: 'HTTP'
+title: '收集箱'
 ---

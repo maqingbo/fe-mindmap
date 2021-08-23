@@ -1,3 +1,3 @@
 ---
-title: 'ECMAScript'
+title: '收集箱'
 ---
