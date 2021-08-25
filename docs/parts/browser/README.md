@@ -26,10 +26,6 @@ title: '收集箱'
    - 从根节点开始，计算每一个元素的大小、位置，给出每个节点所应该出现的屏幕精确坐标，从而得到基于渲染树的 布局渲染树（Layout of the render tree）。
    - 遍历渲染树，将每个节点用 UI 渲染引擎来绘制，从而将整棵树绘制到页面上，这个步骤叫 绘制渲染树（Painting the render tree）
 
-### 页面加载和渲染过程
-
-- [渲染页面：浏览器的工作原理](https://developer.mozilla.org/zh-CN/docs/Web/Performance/How_browsers_work)
-- [问我 Chrome 浏览器的渲染原理（6000 字长文）](https://zhuanlan.zhihu.com/p/336765062)
 
 ### 重绘/回流
 ### 渲染机制

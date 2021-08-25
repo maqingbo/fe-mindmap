@@ -10,15 +10,15 @@ module.exports = {
   themeConfig: {
     displayAllHeaders: true,
     lastUpdated: '上次更新',
-    sidebarDepth: 2,
+    sidebarDepth: 0,
     sidebar: [
       { title: 'HTML', children: ['/parts/html/'] },
-      { title: 'CSS', children: ['/parts/css/', '/parts/css/zjsj'] },
+      { title: 'CSS', children: ['/parts/css/', '/parts/css/zjsj', '/parts/css/z-index', '/parts/css/sass-mixin'] },
       { title: 'JS 概览', children: ['/parts/overView/'] },
       { title: 'ECMA Script', children: ['/parts/ECMA/'] },
       { title: 'JS 核心及原理', children: ['/parts/jsCore/'] },
       { title: 'DOM', children: ['/parts/DOM/'] },
-      { title: '浏览器', children: ['/parts/browser/'] },
+      { title: '浏览器', children: ['/parts/browser/', '/parts/browser/render'] },
       { title: 'HTTP', children: ['/parts/http/'] },
       { title: '前端工程化', children: ['/parts/engineering/'] },
       { title: '数据结构与算法', children: ['/parts/algorithms/'] },
