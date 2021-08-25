@@ -27,5 +27,6 @@ title: '页面加载和渲染过程'
 
 ## 参考
 
+- [浏览器的工作原理：现代网络浏览器幕后揭秘 - HTML5 Rocks](https://www.html5rocks.com/zh/tutorials/internals/howbrowserswork/)
 - [渲染页面：浏览器的工作原理](https://developer.mozilla.org/zh-CN/docs/Web/Performance/How_browsers_work)
 - [问我 Chrome 浏览器的渲染原理（6000 字长文）](https://zhuanlan.zhihu.com/p/336765062)
