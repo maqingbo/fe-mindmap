@@ -2,6 +2,10 @@
 title: '收集箱'
 ---
 
+## JavaScript 是如何工作的
+
+关于这一点，[How javascript works](https://github.com/Troland/how-javascript-works) 系列文章已经介绍的很清楚了，不再赘述。
+
 ## 上下文与作用域
 
 ## 作用域与作用域链
