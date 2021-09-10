@@ -6,6 +6,37 @@ title: '收集箱'
 
 ## 语言语法和形式
 
+CSS 的基本目标是让浏览器以指定的特性去绘制页面元素，比如颜色，定位，装饰。CSS 的语法由下面两个部分构建：
+
+- 属性（ property）是一个标识符，用可读的名称来表示其特性。
+- 值（value）则描述了浏览器引擎如何处理该特性。每个属性都包含一个有效值的集合，它有正式的语法和语义定义，被浏览器引擎实现。 
+
+```css
+/* 声明（declaration） */
+/* 冒号左侧是属性，右侧是值。 */
+color: red；
+
+/* 声明块（declaration block） */
+{
+  color: red;
+  text-align: center;
+}
+
+/* 一对选择器（selector）与声明块称为规则集（ruleset），常简称为规则（rule） */
+div p {
+  color: red;
+  text-align: center;
+}
+
+/* 一对选择器（selector）与声明块称为规则集（ruleset），常简称为规则（rule） */
+div p {
+  color: red;
+  text-align: center;
+}
+```
+
+一个元素可能被多个选择器选中，因此会有多个规则，有可能以不同的值去设置同一属性。CSS 标准会规定哪个优先级最高并生效，称之为 **层叠（cascade）** 算法。
+
 ## 优先级、继承、级联
 
 ### 优先级
