@@ -11,31 +11,53 @@ CSS 的基本目标是让浏览器以指定的特性去绘制页面元素，比�
 - 属性（ property）是一个标识符，用可读的名称来表示其特性。
 - 值（value）则描述了浏览器引擎如何处理该特性。每个属性都包含一个有效值的集合，它有正式的语法和语义定义，被浏览器引擎实现。 
 
-```css
-/* 声明（declaration） */
-/* 冒号左侧是属性，右侧是值。 */
-color: red；
+**声明（declaration）**
 
+```css
+/* 冒号左侧是属性，右侧是值。 */
+color: red;
+```
+
+**声明块（declaration block）**
+
+```css
 /* 声明块（declaration block） */
 {
   color: red;
   text-align: center;
 }
+```
 
-/* 一对选择器（selector）与声明块称为规则集（ruleset），常简称为规则（rule） */
-div p {
-  color: red;
-  text-align: center;
-}
+**规则（ruleset）**
 
+```css
 /* 一对选择器（selector）与声明块称为规则集（ruleset），常简称为规则（rule） */
 div p {
   color: red;
   text-align: center;
 }
 ```
-
 一个元素可能被多个选择器选中，因此会有多个规则，有可能以不同的值去设置同一属性。CSS 标准会规定哪个优先级最高并生效，称之为 **层叠（cascade）** 算法。
+
+**语句（statement）**
+
+有时候网页的作者也希望在样式表中包括其他的一些信息，比如字符集，导入其它的外部样式表，字体等，这些需要专门的语句表示。
+
+语句以非空格的字符开头，以第一个反花括号或分号结束。
+
+```css
+@charset "UTF-8";
+@import 'font.css';
+```
+
+**语句类型：**
+
+- 规则。如上，将一组 CSS 声明与用选择器定义的条件相关联。
+- at 规则（at-rules）。以@ （U+0040 COMMERCIAL AT） 开始，随后是标识符，一直到以分号或右大括号结束。每个 at 规则由其标识符定义，可能有它自己的语法。at 规则涵盖了 meta 信息（比如 @charset  @import），条件信息（比如@media  @document）, 描述信息（比如@font-face）。
+
+![](../../images/css/04.png)
+
+更多 At-Rules 信息请参考：[At-Rules](./atRules)
 
 ## 优先级、继承、级联
 
@@ -49,7 +71,7 @@ div p {
 - 行内样式
 - `!important`关键字
 
-通配选择符（\*）关系选择符（+, >, ~, ' ', ||）和 否定伪类（:not()）对优先级没有影响。（但是，在 :not() 内部声明的选择器会影响优先级）。
+通配选择符（\*）关系选择符（+, >, ~, ' ', ||）和 否定伪类（:not(））对优先级没有影响。（但是，在 :not(） 内部声明的选择器会影响优先级）。
 
 ### 伪类、伪元素
 
