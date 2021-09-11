@@ -18,9 +18,10 @@ module.exports = {
         children: [
           '/parts/css/',
           '/parts/css/overView',
+          '/parts/css/keyConcepts',
           '/parts/css/atRules',
+          '/parts/css/stackingContext',
           '/parts/css/bestPractice',
-          '/parts/css/z-index',
           '/parts/css/sass-mixin'
         ]
       },
