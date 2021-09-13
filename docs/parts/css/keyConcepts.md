@@ -140,6 +140,12 @@ Percentage values: N/A
 
 `inherit` 关键字可用于强制继承，它对继承和非继承属性都生效。对于继承属性，inherit 关键字只是增强了属性的默认行为，只有在重载 (overload) 其它规则的时候被使用。对于非继承属性，inherit 这指定的行为通常没有多大意义，一般使用 initial 或 unset 作为替代。
 
+## 媒体类型
+
+媒体类型（media types）
+
+TODO
+
 ## 盒模型
 
 当对一个文档进行布局（layout）的时候，浏览器的渲染引擎会根据 CSS 基础盒模型（CSS basic box model），将所有元素表示为一个个矩形的盒子（box）。盒模型规则决定了这些盒子的大小、位置以及属性（例如颜色、背景、边框尺寸…）。
@@ -166,7 +172,9 @@ Percentage values: N/A
 
 ## 视觉格式化模型
 
-前面我们讲了浏览器解析文档树时如何给属性赋值并生成一个个的盒子，视觉格式化模型（visual formatting model）则规定了这些盒子在各种不同的屏幕（visual media）上该如何布局。
+前面我们讲了浏览器解析文档树时如何给属性赋值并生成一个个的盒子，视觉格式化模型（visual formatting model）则规定了这些盒子在各种不同的媒体（visual media）上该如何布局。
+
+> 我们这里所讲的内容只适用于`屏幕（screen）`，但是屏幕是属于`媒体（media）`的一种，其他媒体还有：打印设备（paper）、语音设备（speech synthesizer）、盲文设备（braille device），其他媒体类型的布局方式我们暂且不表。
 
 盒子如何布局只受以下几种因素控制：
 
@@ -175,19 +183,40 @@ Percentage values: N/A
 - 文档树中元素之间的关系
 - 外部信息（比如屏幕大小）
 
+再详细说这几个因素之前，我们先捋顺两个概念：
+
+- **视口 (viewport)**：可以简单理解为浏览器的可视窗口，网页实际渲染的面积可能比视口大，此时需要出现滚动条；
+- **包含块 (containing block)**：一个矩形框，关于盒子的位置和大小是相对于这个矩形框的边缘计算的，具体的计算方式比较复杂，需要考虑的情况比较多，有兴趣的可参考 [Visual formatting model details](https://www.w3.org/TR/CSS2/visudet.html)。当我们说“盒子 B 的包含块”的时候，指的是盒子 B 的父元素所生成的、盒子 B 现在呆的这个包含块，而不是盒子 B 生成的那个包含块。
+
 ### 盒子的尺寸和类型
 
 `display`属性决定了所生成的盒子的类型，盒子的尺寸如何计算与盒子的类型息息相关。
 
-最常见的盒子类型就是**块级盒子（block-level box）**，当 display 属性的值为'block', 'list-item'或'table'时生成块级盒子。每个块级盒子内部还会默认的生成一个主盒子（principal block-level box），其用放置内容和子盒子，大多数的元素都只会生成一个主盒子，所以我们可以认为 block-level box === principal block-level box；但是有一些元素，除了生成主盒子之外会再生成一些附加盒子（additional box），比方说`li`元素的项目标记部分就属于附加盒子。
+**块级盒子（block-level box）**：当 display 属性的值为'block'、'list-item'或'table'时生成块级盒子。每个块级盒子内部还会默认的生成一个主盒子（principal block-level box），其用放置内容和子盒子，大多数的元素都只会生成一个主盒子，所以我们可以认为 block-level box === principal block-level box；但是有一些元素，除了生成主盒子之外会再生成一些附加盒子（additional box），比方说`li`元素的项目标记部分就属于附加盒子。
 
-另一种盒子类型是**行内盒子（inline box）**
+**行内盒子（inline box）**：当 display 属性的值为'inline'、'inline-table'或'inline-block'时生成行内盒子。
 
-## 弹性布局
+### 定位方式
 
-## 元素类型
+:::warning
+关于`format`，虽然`格式化`这个词可能早已深入人心了，但是我自己更倾向于译作`排版`！
+:::
 
-## 层叠上下文
+**常规流 (normal flow)**
+
+常规流包括块级盒子的`块级排版方式`(block formatting)和行内盒子的`行内排版方式`(inline formatting)，以及`相对定位`(relative positioning)。如果一个元素是浮动的、绝对定位的或者是根元素，那么就称之为脱离常规流(out of flow)。
+
+**浮动 (float)**
+
+首先按照常规流布置一个盒子，然后从常规流中取出这个盒子，并尽可能地向左或向右移动。
+
+**定位 (position)**
+
+一个盒子被完全从常规流中移除（它对后面的元素没有影响）并分配一个相对于`这个盒子包含块`的位置。
+
+
+
+### 层叠上下文
 
 假定用户正面向浏览器或网页，而 HTML 元素沿着其相对于用户的一条虚构的 z 轴排开，HTML 元素按照一定规则在这个 z 轴上依次层叠。满足一定条件的元素可形成**层叠上下文（stacking context）**，在层叠上下文中，子元素也按照同样的规则进行层叠。 **重要的是，子元素的 z-index 值只在父级中才有意义**。子级层叠上下文被自动视为父级层叠上下文的一个独立单元。
 
@@ -196,6 +225,10 @@ Percentage values: N/A
 - 每个层叠上下文都是自包含的：当一个元素的内容发生层叠后，该元素将被作为整体在父级层叠上下文中按顺序进行层叠。
 
 更多信息参考：[层叠上下文](./stackingContext.md)
+
+## 弹性布局
+
+## 元素类型
 
 ## Text
 
