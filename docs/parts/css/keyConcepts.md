@@ -6,38 +6,38 @@ title: '关键概念'
 
 CSS 的基本目标是让浏览器以指定的特性去绘制页面元素，比如颜色，定位，装饰。CSS 的语法由下面两个部分构建：
 
-- 属性（ property）是一个标识符，用可读的名称来表示其特性。
-- 值（value）则描述了浏览器引擎如何处理该特性。每个属性都包含一个有效值的集合，它有正式的语法和语义定义，被浏览器引擎实现。 
+- 属性 (property) 是一个标识符，用可读的名称来表示其特性。
+- 值 (value) 则描述了浏览器引擎如何处理该特性。每个属性都包含一个有效值的集合，它有正式的语法和语义定义，被浏览器引擎实现。 
 
-**声明（declaration）**
+**声明 (declaration)**
 
 ```css
 /* 冒号左侧是属性，右侧是值。 */
 color: red;
 ```
 
-**声明块（declaration block）**
+**声明块 (declaration block)**
 
 ```css
-/* 声明块（declaration block） */
+/* 声明块 (declaration block) */
 {
   color: red;
   text-align: center;
 }
 ```
 
-**规则（ruleset）**
+**规则 (ruleset)**
 
 ```css
-/* 一对选择器（selector）与声明块称为规则集（ruleset），常简称为规则（rule） */
+/* 一对选择器 (selector) 与声明块称为规则集 (ruleset)，常简称为规则 (rule) */
 div p {
   color: red;
   text-align: center;
 }
 ```
-一个元素可能被多个选择器选中，因此会有多个规则，有可能以不同的值去设置同一属性。CSS 标准会规定哪个优先级最高并生效，称之为 **级联（cascade）** 算法，下一节会详细讲。
+一个元素可能被多个选择器选中，因此会有多个规则，有可能以不同的值去设置同一属性。CSS 标准会规定哪个优先级最高并生效，称之为 **级联 (cascade)** 算法，下一节会详细讲。
 
-**语句（statement）**
+**语句 (statement)**
 
 有时候网页的作者也希望在样式表中包括其他的一些信息，比如字符集，导入其它的外部样式表，字体等，这些需要专门的语句表示。
 
@@ -53,8 +53,8 @@ div p {
 
 所以语句有以下两种类型：
 
-- 规则（rule）。如上，将一组 CSS 声明与用选择器定义的条件相关联。
-- at 规则（at-rules）。以@ （U+0040 COMMERCIAL AT） 开始，随后是标识符，一直到以分号或右大括号结束。每个 at 规则由其标识符定义，可能有它自己的语法。at 规则涵盖了 meta 信息（比如 @charset  @import），条件信息（比如@media  @document）, 描述信息（比如@font-face）。
+- 规则 (rule)。如上，将一组 CSS 声明与用选择器定义的条件相关联。
+- at 规则 (at-rules)。以@ (U+0040 COMMERCIAL AT) 开始，随后是标识符，一直到以分号或右大括号结束。每个 at 规则由其标识符定义，可能有它自己的语法。at 规则涵盖了 meta 信息（比如 @charset  @import），条件信息（比如@media  @document）, 描述信息（比如@font-face）。
 
 ![](../../images/css/04.png)
 
@@ -62,13 +62,13 @@ div p {
 
 ## 级联、继承
 
-### 级联（cascade）
+### 级联 (cascade)
 
 > 有的时候也将 cascade 翻译为`层叠`，这里为了和`层叠上下文`区分开，采用`级联`这个词。
 > 
 > 级联既可以做名词也可以做动词，请注意区分！
 
-CSS 样式表可能有三个不同的来源：用户代理（浏览器）、作者（网站开发者）、用户（网站使用者）。这三个不同来源的 CSS 规则难免会有重叠冲突的地方，CCS 规范定义了一套规则来解决这种冲突，决定最后采用哪个源的样式，这套规则就叫做**级联（cascade）**。级联为每个样式规则分配一个权重。当多项规则产生冲突时，权重最大的规则优先。
+CSS 样式表可能有三个不同的来源：用户代理（浏览器）、作者（网站开发者）、用户（网站使用者）。这三个不同来源的 CSS 规则难免会有重叠冲突的地方，CCS 规范定义了一套规则来解决这种冲突，决定最后采用哪个源的样式，这套规则就叫做**级联 (cascade)**。级联为每个样式规则分配一个权重。当多项规则产生冲突时，权重最大的规则优先。
 
 **级联顺序**
 
@@ -103,24 +103,24 @@ CSS 样式表可能有三个不同的来源：用户代理（浏览器）、作�
 - 不建议使用 !important，因为这破坏了固有的优先级规则，使得调试变得更加困难。
 :::
 
-### 继承（Inheritance）
+### 继承 (Inheritance)
 
 **属性值的确定**
 
 当浏览器解析文档构成文档树的时候，必须给每个元素的每个属性分配一个值，这个值的最终结果是通过以下四步计算出来的：
 
-1. 浏览器根据以下机制为每个属性分配一个指定值（specified value）；
+1. 浏览器根据以下机制为每个属性分配一个指定值 (specified value)；
    1. 如果使用级联算法筛出来一个值，那它就是指定值；
    2. 否则，查看属性是否可继承，如果可继承且不是根元素，那就继承父元素的计算值；
-   3. 如果属性不可继承，或者为根元素，那就使用规范中定义的初始值（initial value）。[CSS 属性定义](https://www.w3.org/TR/CSS2/about.html#property-defs)
-2. 有了指定值之后，解析为用于继承的计算值（computed value）；
+   3. 如果属性不可继承，或者为根元素，那就使用规范中定义的初始值 (initial value)。[CSS 属性定义](https://www.w3.org/TR/CSS2/about.html#property-defs)
+2. 有了指定值之后，解析为用于继承的计算值 (computed value)；
    - 例如：'em' 和 'ex' 等相对单位被计算为像素或绝对长度。
-3. 然后在必要时转化为绝对值（used value）；
+3. 然后在必要时转化为绝对值 (used value)；
    - 例如：某些值只能在布置文档时确定，比方说百分比宽度。
-4. 最后根据当地环境的限制转化为实际的值（actual value）。
+4. 最后根据当地环境的限制转化为实际的值 (actual value)。
    - 例如，某些浏览器只能渲染整数像素宽度的边框，因此必须计算出近似的整数值。
 
-每个属性是否默认继承，以及它的初始值（initial value）都是在定义表中定义的。
+每个属性是否默认继承，以及它的初始值 (initial value) 都是在定义表中定义的。
 
 例如 [height](https://www.w3.org/TR/CSS1/#height) 属性：
 
@@ -134,21 +134,21 @@ Percentage values: N/A
 
 **继承**
 
-所谓继承就是当一个默认继承属性（inherited property）没有指定值时，则取父元素的同属性的计算值（computed value）。
+所谓继承就是当一个默认继承属性 (inherited property) 没有指定值时，则取父元素的同属性的计算值 (computed value)。
 
-注意是**默认继承属性**，非继承属性（reset property）没有指定值时，则取属性的初始值（initial value）。
+注意是**默认继承属性**，非继承属性 (reset property) 没有指定值时，则取属性的初始值 (initial value)。
 
 `inherit` 关键字可用于强制继承，它对继承和非继承属性都生效。对于继承属性，inherit 关键字只是增强了属性的默认行为，只有在重载 (overload) 其它规则的时候被使用。对于非继承属性，inherit 这指定的行为通常没有多大意义，一般使用 initial 或 unset 作为替代。
 
 ## 媒体类型
 
-媒体类型（media types）
+媒体类型 (media types)
 
 TODO
 
 ## 盒模型
 
-当对一个文档进行布局（layout）的时候，浏览器的渲染引擎会根据 CSS 基础盒模型（CSS basic box model），将所有元素表示为一个个矩形的盒子（box）。盒模型规则决定了这些盒子的大小、位置以及属性（例如颜色、背景、边框尺寸…）。
+当对一个文档进行布局 (layout) 的时候，浏览器的渲染引擎会根据 CSS 基础盒模型 (CSS basic box model)，将所有元素表示为一个个矩形的盒子 (box)。盒模型规则决定了这些盒子的大小、位置以及属性（例如颜色、背景、边框尺寸…）。
 
 每个盒子由四个部分（区域）组成：content、padding、border、margin。
 
@@ -172,9 +172,9 @@ TODO
 
 ## 视觉格式化模型
 
-前面我们讲了浏览器解析文档树时如何给属性赋值并生成一个个的盒子，视觉格式化模型（visual formatting model）则规定了这些盒子在各种不同的媒体（visual media）上该如何布局。
+前面我们讲了浏览器解析文档树时如何给属性赋值并生成一个个的盒子，视觉格式化模型 (visual formatting model) 则规定了这些盒子在各种不同的媒体 (visual media) 上该如何布局。
 
-> 我们这里所讲的内容只适用于`屏幕（screen）`，但是屏幕是属于`媒体（media）`的一种，其他媒体还有：打印设备（paper）、语音设备（speech synthesizer）、盲文设备（braille device），其他媒体类型的布局方式我们暂且不表。
+> 我们这里所讲的内容只适用于`屏幕 (screen)`，但是屏幕是属于`媒体 (media)`的一种，其他媒体还有：打印设备 (paper)、语音设备 (speech synthesizer)、盲文设备 (braille device)，其他媒体类型的布局方式我们暂且不表。
 
 盒子如何布局只受以下几种因素控制：
 
@@ -192,9 +192,9 @@ TODO
 
 `display`属性决定了所生成的盒子的类型，盒子的尺寸如何计算与盒子的类型息息相关。
 
-**块级盒子（block-level box）**：当 display 属性的值为'block'、'list-item'或'table'时生成块级盒子。每个块级盒子内部还会默认的生成一个主盒子（principal block-level box），其用放置内容和子盒子，大多数的元素都只会生成一个主盒子，所以我们可以认为 block-level box === principal block-level box；但是有一些元素，除了生成主盒子之外会再生成一些附加盒子（additional box），比方说`li`元素的项目标记部分就属于附加盒子。
+**块级盒子 (block-level box)**：当 display 属性的值为'block'、'list-item'或'table'时生成块级盒子。每个块级盒子内部还会默认的生成一个主盒子 (principal block-level box)，其用放置内容和子盒子，大多数的元素都只会生成一个主盒子，所以我们可以认为 block-level box === principal block-level box；但是有一些元素，除了生成主盒子之外会再生成一些附加盒子 (additional box)，比方说`li`元素的项目标记部分就属于附加盒子。
 
-**行内盒子（inline box）**：当 display 属性的值为'inline'、'inline-table'或'inline-block'时生成行内盒子。
+**行内盒子 (inline box)**：当 display 属性的值为'inline'、'inline-table'或'inline-block'时生成行内盒子。
 
 ### 定位方式
 
@@ -204,7 +204,24 @@ TODO
 
 **常规流 (normal flow)**
 
-常规流包括块级盒子的`块级排版方式`(block formatting)和行内盒子的`行内排版方式`(inline formatting)，以及`相对定位`(relative positioning)。如果一个元素是浮动的、绝对定位的或者是根元素，那么就称之为脱离常规流(out of flow)。
+常规流包括块级盒子的`块级排版方式`(block formatting) 和行内盒子的`行内排版方式`(inline formatting)，以及`相对定位`(relative positioning)。如果一个元素是浮动的、绝对定位的或者是根元素，那么就称之为脱离常规流 (out of flow)。
+
+常规流中，块级盒子存在于一个块级排版上下文 (block formatting context) 中，行内盒子存在于一个行内排版上下文 (inline formatting context) 中。
+
+> 块级排版上下文、行内排版上下文其实指的是一个区域，CSS 规范规定了这样的区域如何生成，以及在这样的区域内盒子如何排列。
+
+- 块级排版上下文的生成：
+  - 太多了，说下常见的：根元素、浮动、绝对定位、固定定位、block、inline-block、flex、table、overflow 不为 visible 的块级元素。..
+- 块级排版上下文的排列规则：
+  - 盒子在它的包含块中从上往下依次排列，同级盒子之间的距离由 margin 属性决定，`相邻同级盒子`之间垂直方向上的 margin 会折叠；
+  - 如何解决折叠问题：生成新的块级排版上下文即可；
+- 行内排版上下文的生成：
+  - display: inline
+- 行内排版上下文的排列规则：
+  - 盒子从包含块的顶部开始一个挨一个水平或垂直排列（取决于 writing-mode 属性，默认水平排列），这些盒之间的水平方向上的 margin，border和 padding 都有效；
+  - 盒子垂直方向的对齐方式由 vertical-align 属性决定；
+  - 包含这一行所有盒子的矩形区域被称作行框(line box)。
+  - 这一块信息还挺复杂的，更多信息请参考 [行内排版](./inlineFormatting.md)。
 
 **浮动 (float)**
 
@@ -214,11 +231,9 @@ TODO
 
 一个盒子被完全从常规流中移除（它对后面的元素没有影响）并分配一个相对于`这个盒子包含块`的位置。
 
-
-
 ### 层叠上下文
 
-假定用户正面向浏览器或网页，而 HTML 元素沿着其相对于用户的一条虚构的 z 轴排开，HTML 元素按照一定规则在这个 z 轴上依次层叠。满足一定条件的元素可形成**层叠上下文（stacking context）**，在层叠上下文中，子元素也按照同样的规则进行层叠。 **重要的是，子元素的 z-index 值只在父级中才有意义**。子级层叠上下文被自动视为父级层叠上下文的一个独立单元。
+假定用户正面向浏览器或网页，而 HTML 元素沿着其相对于用户的一条虚构的 z 轴排开，HTML 元素按照一定规则在这个 z 轴上依次层叠。满足一定条件的元素可形成**层叠上下文 (stacking context)**，在层叠上下文中，子元素也按照同样的规则进行层叠。 **重要的是，子元素的 z-index 值只在父级中才有意义**。子级层叠上下文被自动视为父级层叠上下文的一个独立单元。
 
 - 层叠上下文可以包含在其他层叠上下文中，并且一起创建一个层叠上下文的层级。
 - 每个层叠上下文都完全独立于它的兄弟元素：当处理层叠时只考虑子元素。
@@ -240,7 +255,7 @@ TODO
 
 ### BFC、IFC、GFC、FFC
 
-**BFC（Block formatting contexts）：块级格式上下文**
+**BFC(Block formatting contexts)：块级格式上下文**
 
 一个独立的渲染区域，只有块级元素参与， 内部的 Box 会在垂直方向依次放置，并且这个区域与外部毫不相干，margin 不会重叠。
 
@@ -253,11 +268,11 @@ TODO
 - overflow 不为 visible
 ```
 
-**IFC（Inline formatting contexts）：内联格式上下文**
+**IFC(Inline formatting contexts)：内联格式上下文**
 
-**GFC（GrideLayout formatting contexts）：网格布局格式化上下文**
+**GFC(GrideLayout formatting contexts)：网格布局格式化上下文**
 
-**FFC（Flex formatting contexts）: 自适应格式上下文**
+**FFC(Flex formatting contexts): 自适应格式上下文**
 
 ### CSS 渲染原理
 

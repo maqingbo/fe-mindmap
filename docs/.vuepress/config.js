@@ -20,6 +20,7 @@ module.exports = {
           '/parts/css/overView',
           '/parts/css/keyConcepts',
           '/parts/css/atRules',
+          '/parts/css/inlineFormatting',
           '/parts/css/stackingContext',
           '/parts/css/bestPractice',
           '/parts/css/sass-mixin'
