@@ -245,49 +245,14 @@ TODO
 
 更多信息参考：[层叠上下文](./stackingContext.md)
 
-## 弹性布局
-
-## 元素类型
-
-## Text
-
-## Background、Border
-
 ## 媒体查询
 
 ## 动画
 
-### BFC、IFC、GFC、FFC
+TODO
+## 弹性布局
 
-**BFC(Block formatting contexts)：块级格式上下文**
-
-一个独立的渲染区域，只有块级元素参与， 内部的 Box 会在垂直方向依次放置，并且这个区域与外部毫不相干，margin 不会重叠。
-
-```
-// 如何生成：
-- 根元素
-- float 属性不为 none
-- position 为 absolute 或 fixed
-- display 为 inline-block, table-cell, table-caption, flex, inline-flex
-- overflow 不为 visible
-```
-
-**IFC(Inline formatting contexts)：内联格式上下文**
-
-**GFC(GrideLayout formatting contexts)：网格布局格式化上下文**
-
-**FFC(Flex formatting contexts): 自适应格式上下文**
-
-### CSS 渲染原理
-
-1. 解析源文档并创建文档树。
-2. 识别目标媒体类型。
-3. 检索文档相关特定目标媒体类型的所有样式表
-4. 通过给每个适用于目标媒体类型的属性赋值来为文档树中的元素做标注。根据层叠与继承中描述的机制来对属性赋值
-  值的计算部分取决于适用于目标媒体类型的格式化算法。例如，如果目标媒体是 screen，用户代理会应用视觉排版模型
-5. 根据有标注的文档树，生成格式化结构。通常，格式化结构与文档树很像，但也可能大不一样，尤其是编写者使用伪元素和生成的内容时。首先，格式化结构根本没必要是“树形的”——结构的类型取决于实现。其次，与文档树相比，格式化结构包含的信息可能更多也可能更少。例如，如果文档树中的一个元素有一个值为'none'的'display'属性，这个元素将不会在格式化结构中生成任何东西。而一个列表元素可能在格式化结构中生成更多信息：列表元素的内容和列表样式信息（例如，黑点图片）
-  注意 CSS 用户代理不会在这个阶段改变文档树，特别的，由样式表生成的内容生成不会被反馈给文档语言处理器（例如，重新解析）
-6. 把格式化结构传递给目标媒体（例如，打印结果，在屏幕上显示，渲染为声音等等）
+TODO
 
 > [The CSS 2.1 processing model](https://www.w3.org/TR/CSS2/intro.html)
 
