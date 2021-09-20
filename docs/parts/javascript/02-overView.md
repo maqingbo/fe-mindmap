@@ -1,5 +1,5 @@
 ---
-title: '收集箱'
+title: '概览'
 ---
 
 ## 浏览器端 JS
@@ -25,4 +25,6 @@ title: '收集箱'
 
 ## Nodejs
 
-todo
+客户端 JS 的相同之处：都使用 ECMAScript 作为基本语法；
+
+不同之处：因为 Nodejs 是服务端，所以客户端 JS 中的那些 Web APIS 是无法使用的，但是 nodejs 中定义了自己在 server 端特有的 API，例如 http fs Stream os 等。

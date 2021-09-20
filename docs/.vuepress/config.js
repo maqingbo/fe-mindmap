@@ -22,14 +22,21 @@ module.exports = {
           '/parts/css/atRules',
           '/parts/css/inlineFormatting',
           '/parts/css/stackingContext',
-          '/parts/css/bestPractice',
-          '/parts/css/sass-mixin'
+          '/parts/css/preprocessor',
+          '/parts/css/sass-mixin',
+          '/parts/css/bestPractice'
         ]
       },
-      { title: 'JS 概览', children: ['/parts/overView/'] },
+      {
+        title: 'JavaScript',
+        children: [
+          '/parts/javascript/01-inBox',
+          '/parts/javascript/02-overView',
+          '/parts/javascript/03-keyConcepts'
+        ]
+      },
       { title: 'ECMA Script', children: ['/parts/ECMA/'] },
-      { title: 'JS 核心及原理', children: ['/parts/jsCore/'] },
-      { title: 'DOM', children: ['/parts/DOM/'] },
+      { title: 'Web APIs', children: ['/parts/webApis/', '/parts/webApis/DOM'] },
       { title: '浏览器', children: ['/parts/browser/', '/parts/browser/render'] },
       { title: 'HTTP', children: ['/parts/http/'] },
       { title: '前端工程化', children: ['/parts/engineering/'] },

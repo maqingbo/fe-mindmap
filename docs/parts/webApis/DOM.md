@@ -1,5 +1,5 @@
 ---
-title: '收集箱'
+title: 'DOM'
 ---
 
 ## DOM Core 与 HTML-DOM
