@@ -32,7 +32,9 @@ module.exports = {
         children: [
           '/parts/javascript/01-inBox',
           '/parts/javascript/02-overView',
-          '/parts/javascript/03-keyConcepts'
+          '/parts/javascript/03-keyConcepts',
+          '/parts/javascript/11-executionContext',
+          '/parts/javascript/20-handWritten'
         ]
       },
       { title: 'ECMA Script', children: ['/parts/ECMA/'] },
