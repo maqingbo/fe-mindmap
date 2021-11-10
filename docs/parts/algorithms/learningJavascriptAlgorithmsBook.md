@@ -97,13 +97,204 @@ console.log('packt' == true) // false
 | of         | 根据传入的参数创建一个新数组                                               |
 | values     | 返回包含数组中所有值的 @@iterator                                          |
 
+**for...of 语句**
 
+for...of 可以用来迭代数组。
+
+> 其实 for...of 还可以用来迭代 String、Set、Map、函数和 argument 对象，理论上说，他可以迭代任何可迭代的对象。
+> 所谓**可迭代对象**，就是实现了 [可迭代协议](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Iteration_protocols) 的对象。
+
+**@@iterator 对象**
+
+ES2015 还为 Array 类增加了一个 @@iterator 属性，需要通过 Symbol.iterator 来访问。
+
+> @@iterator 属性同样可参考 [可迭代协议](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Iteration_protocols) 部分。
+
+```js
+let iterator = numbers[Symbol.iterator]();
+console.log(iterator.next().value); // 1
+```
+
+然后，不断调用迭代器的 next 方法，就能依次得到数组中的值。
+
+**keys 方法**
+
+keys 方法返回包含数组索引的 @@iterator，下面是使用该方法的代码示例。
+
+```js
+const aKeys = numbers.keys(); // 得到数组索引的迭代器
+console.log(aKeys.next()); // {value: 0, done: false }
+```
+
+### 类型数组（TypedArray）
+
+与 C 和 Java 等其他语言不同， JavaScript 数组不是强类型的，因此它可以存储任意类型的数据。（最佳实践：存储同一类型的数据）
+
+类型数组则用于存储单一类型的数据。它的语法是 let myArray = new TypedArray(length)，其中 TypedArray 需替换为下表所列之一。
+
+| 类型数组          | 数据类型            |
+| ----------------- | ------------------- |
+| Int8Array         | 8 位二进制补码整数  |
+| Uint8Array        | 8 位无符号整数      |
+| Uint8ClampedArray | 8 位无符号整数      |
+| Int16Array        | 16 位二进制补码整数 |
+| Uint16Array       | 16 位无符号整数     |
+| Int32Array        | 32 位二进制补码整数 |
+| Uint32Array       | 32 位无符号整数     |
+| Float32Array      | 32 位 IEEE 浮点数   |
+| Float64Array      | 64 位 IEEE 浮点数   |
+
+使用 WebGL API、进行位操作、处理文件和图像时，类型数组都可以大展拳脚。它用起来和普通数组毫无二致，本章所学的数组方法和功能都可以用于类型数组。
 
 ## 第 4 章　栈
 
 栈是一种遵从后进先出（LIFO）原则的有序集合。新添加或待删除的元素都保存在栈的同一端，称作栈顶，另一端就叫栈底。在栈里，新元素都靠近栈顶，旧元素都接近栈底。
 
+栈结构类似于数组，但是在添加和删除元素时更为可控。
+
+**基于数组的栈**
+
+```js
+class Stack(){
+  constructor () {
+    this.items = []
+  }
+  //添加一个（或几个）新元素到栈顶
+  push (element) { this.items.push(element) }
+  //移除栈顶元素，并返回被移除的元素
+  pop () { return this.items.pop() }
+  //返回栈顶的元素，不对栈进行任何修改
+  peek () { return this.items[this.items.length - 1] }
+  //移除栈里的所有元素
+  clear () { this.items = [] }
+  //判断栈空，没有元素返回 true, 否则返回 false
+  isEmpty () { return this.items.length === 0 }
+  //返回栈里元素的个数
+  size () { return this.items.length }
+}
+```
+
+**基于对象的栈**
+
+- 数组属于有序集合，会占用更多的内存空间；
+- 数组中查找元素时，需要遍历所有元素，复杂度更高（O(n)）。
+
+```js
+class Stack {
+  constructor () {
+    this.count = 0
+    this.items = {}
+  }
+  // 添加元素
+  push (element) {
+    this.items[this.count] = element
+    this.count++
+  }
+  // 弹出元素
+  pop () {
+    if (this.isEmpty()) { return undefined }
+
+    this.count--
+    const result = this.items[this.count]
+    delete this.items[this.count]
+    return result
+  }
+  //返回栈顶的元素，不对栈进行任何修改
+  peek () {
+    if (this.isEmpty()) { return undefined }
+    return this.items[this.count - 1]
+  }
+  // 移除所有元素
+  clear () {
+    this.items = {}
+    this.count = 0
+  }
+  // 栈的大小
+  size() { return this.count }
+  // 栈是否为空
+  isEmpty() { return this.count === 0 }
+
+  // 打印栈的内容
+  toString() {
+    if (this.isEmpty()) { return '' }
+    let objString = `${this.items[0]}`
+    for (let i = 1; i < this.count; i++) {
+      objString = `${objString},${this.items[i]}`
+    }
+    return objString
+  }
+}
+```
+
+存在的问题：我们在 Stack 类中声明的 items 和 count 属性并没有得到保护，不是私有属性。
+
+解决方法：下划线约定、Symbol、WeakMap。
+
+然而，事实上，我们不能像在其他编程语言中一样声明私有属性和方法。虽然有很多种方法都可以达到相同的效果，但无论是在语法还是性能层面，这些方法都有各自的优点和缺点。
+
+### 栈结构常见的算法问题
+
+TODO
+
 ## 第 5 章　队列和双端队列
+
+- 队列和栈非常类似，但是使用了与后进先出不同的原则。
+- 双端队列是一种将栈的原则和队列的原则混合在一起的数据结构。
+- 队列是遵循先进先出（ FIFO，也称为先来先服务）原则的一组有序的项。队列在尾部添加新元素，并从顶部移除元素。最新添加的元素必须排在队列的末尾。
+
+**队列**
+
+```js
+class Queue {
+  constructor () {
+    this.count = 0
+    this.lowestCount = 0
+    this.items = {}
+  }
+  // 添加多个项到尾部
+  enqueue (element) {
+    this.items[this.count] = element
+    this.count++
+  }
+  // 移除第一项，并返回元素
+  dequeue () {
+    if (this.isEmpty()) { return undefined }
+    const result = this.items[this.lowestCount]
+    delete this.items[this.lowestCount]
+    this.lowestCount++
+    return result
+  }
+  // 返回第一个元素，不改变队列
+  peek () {
+    if (this.isEmpty()) { return undefined }
+    return this.items[this.lowestCount]
+  }
+  // 返回队列元素个数
+  size () { return this.count - this.lowestCount }
+  isEmpty () { return this.size() === 0 }
+  // 清空队列
+  clear() {
+    this.items = {}
+    this.count = 0
+    this.lowestCount = 0
+  }
+  toString() {
+    if (this.isEmpty()) { return '' }
+    let objString = `${this.items[this.lowestCount]}`
+    for (let i = this.lowestCount + 1; i < this.count; i++) {
+      objString = `${objString},${this.items[i]}`
+    }
+    return objString
+  }
+}
+```
+
+**双端队列**
+
+- 允许同时从前端和后端添加和移除元素的特殊队列。
+
+
+
 ## 第 6 章　链表
 ## 第 7 章　集合
 ## 第 8 章　字典和散列表
