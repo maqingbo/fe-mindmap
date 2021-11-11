@@ -193,7 +193,6 @@ class Stack {
   // 弹出元素
   pop () {
     if (this.isEmpty()) { return undefined }
-
     this.count--
     const result = this.items[this.count]
     delete this.items[this.count]
@@ -242,14 +241,16 @@ TODO
 - 双端队列是一种将栈的原则和队列的原则混合在一起的数据结构。
 - 队列是遵循先进先出（ FIFO，也称为先来先服务）原则的一组有序的项。队列在尾部添加新元素，并从顶部移除元素。最新添加的元素必须排在队列的末尾。
 
-**队列**
+### 队列
+
+可以使用数组来存储队列内的元素，但是为了在获取元素时更高效，我们还是会使用一个对象来存储我们的元素。
 
 ```js
 class Queue {
   constructor () {
-    this.count = 0
-    this.lowestCount = 0
-    this.items = {}
+    this.items = {}        // 用来存储元素
+    this.count = 0         // 用来控制队列大小
+    this.firstCount = 0    // 用来追踪第一个元素
   }
   // 添加多个项到尾部
   enqueue (element) {
@@ -257,31 +258,31 @@ class Queue {
     this.count++
   }
   // 移除第一项，并返回元素
-  dequeue () {
+  dequeueue () {
     if (this.isEmpty()) { return undefined }
-    const result = this.items[this.lowestCount]
-    delete this.items[this.lowestCount]
-    this.lowestCount++
+    const result = this.items[this.firstCount]
+    delete this.items[this.firstCount]
+    this.firstCount++
     return result
   }
   // 返回第一个元素，不改变队列
   peek () {
     if (this.isEmpty()) { return undefined }
-    return this.items[this.lowestCount]
+    return this.items[this.firstCount]
   }
   // 返回队列元素个数
-  size () { return this.count - this.lowestCount }
+  size () { return this.count - this.firstCount }
   isEmpty () { return this.size() === 0 }
   // 清空队列
   clear() {
     this.items = {}
     this.count = 0
-    this.lowestCount = 0
+    this.firstCount = 0
   }
   toString() {
     if (this.isEmpty()) { return '' }
-    let objString = `${this.items[this.lowestCount]}`
-    for (let i = this.lowestCount + 1; i < this.count; i++) {
+    let objString = `${this.items[this.firstCount]}`
+    for (let i = this.firstCount + 1; i < this.count; i++) {
       objString = `${objString},${this.items[i]}`
     }
     return objString
@@ -289,11 +290,152 @@ class Queue {
 }
 ```
 
-**双端队列**
+**队列应用 - 击鼓传花游戏**
+
+- 游戏规则：孩子们围成一个圆圈，把花尽快地传递给旁边的人。某一时刻传花停止，这个时候花在谁手里，谁就退出圆圈、结束游戏。重复这个过程，直到只剩一个孩子（胜者）。
+
+```js
+function hotPotato (itemList, num) {
+  const queue = new Queue()
+  const eliminatedList = []
+
+  for (let i = 0; i < itemList.length; i++) {
+    queue.enqueue(itemList[i])
+  }
+
+  while (queue.size() > 1) {
+    // 循环队列，打乱之前的顺序
+    for (let i = 0; i < num; i++) {
+      queue.enqueue(queue.dequeueue())
+    }
+    // 淘汰队列的第一个（尽然顺序已乱，淘汰的就是随机的）
+    eliminatedList.push(queue.dequeueue())
+  }
+
+  return {
+    eliminated: eliminatedList,
+    winner: queue.dequeueue()
+  }
+}
+```
+
+### 双端队列
 
 - 允许同时从前端和后端添加和移除元素的特殊队列。
+- 由于双端队列同时遵守了`先进先出`和`后进先出`原则，可以说它是把队列和栈相结合的一种数据结构。所以和 Queue、Stack 类有一些相同的方法。
+- 常见应用是计算机中存储一系列的撤销操作：用户操作被保存到一个双端队列中，点击撤销按钮时，该操作从队列后面移除；当操作数量大于指定值时，则移除队列前端保存的的操作，保持队列的长度不会超出指定值。
 
+```js
+class Dequeue {
+  constructor () {
+    this.count = 0
+    this.firstCount = 0
+    this.items = {}
+  }
+  // 返回队列元素个数
+  size () { return this.count - this.firstCount }
+  isEmpty () { return this.size() === 0 }
+  // 清空队列
+  clear() {
+    this.items = {}
+    this.count = 0
+    this.firstCount = 0
+  }
+  toString() {
+    if (this.isEmpty()) { return '' }
+    let objString = `${this.items[this.firstCount]}`
+    for (let i = this.firstCount + 1; i < this.count; i++) {
+      objString = `${objString},${this.items[i]}`
+    }
+    return objString
+  }
 
+  // 队列前端添加元素
+  addFront (element) {
+    if (this.isEmpty) {
+      this.addBack(element)
+    } else if (this.firstCount > 0) {
+      this.firstCount--
+      this.items[this.firstCount] = element
+    } else {
+      // firstCount = 0 的情况
+      for (let i = this.count; i > 0; i--) {
+        this.items[i] = this.items[i - 1]
+      }
+      this.count++
+      this.firstCount = 0
+      this.items[0] = element
+    }
+  }
+  // 队列后端添加元素 - 与 Queue 类中的 enqueue 方法相同
+  addBack (element) {
+    this.items[this.count] = element
+    this.count++
+  }
+  // 队列前端移除一个元素 - 与 Queue 类中的 dequeueue 方法相同
+  removeFront () {
+    if (this.isEmpty()) { return undefined }
+    const result = this.items[this.firstCount]
+    delete this.items[this.firstCount]
+    this.firstCount++
+    return result
+  }
+  // 队列后端移除一个元素 - 与 Stack 类中的 pop 方法相同
+  removeBack () {
+    if (this.isEmpty()) { return undefined }
+    this.count--
+    const result = this.items[this.count]
+    delete this.items[this.count]
+    return result
+  }
+  // 返回队列前端的第一个元素 - 与 Queue 类中的 peek 方法相同
+  peekFront () {
+    if (this.isEmpty()) { return undefined }
+    return this.items[this.firstCount]
+  }
+  // 返回队列后端的第一个元素 - 与 Stack 中的 peek 方法相同
+  peekBack () {
+    if (this.isEmpty()) { return undefined }
+    return this.items[this.count - 1]
+  }
+}
+```
+
+在 Dequeue 类中，最复杂的是 addFront 方法，分三种情况：
+
+1. 队列为空时直接添加即可；
+2. 已经调用过 removeFront 方法，此时 firstCount > 0，此时只需 firstCount - 1 然后添加即可；
+3. 未调用过 removeFront 方法，firstCount 为 0。此时先设置一个负值的键，这样可以保持很低的计算成本，然后我们将所有元素后移一位空出第一个位置。注意我们是从最后一位开始迭代。
+
+**双端队列应用 - 回文检查器**
+
+> 回文：正反都能读通的单词、词组、数或一系列字符的序列，例如 madam 或 racecar。
+
+```js
+function palindromeChecker (str) {
+  if (str === undefined || str === null || (str !== null && str.length === 0)) {
+    return false
+  }
+
+  const strArr = str.toLocalLowerCase().split(' ').join('').split('')
+  const dequeue = new Dequeue()
+  let isEqual = true
+  let firstItem, lastItem
+  for (const item of strArr) {
+    dequeue.addBack(item)
+  }
+
+  while (dequeue.size() > 1 && isEqual) {
+    firstItem = dequeue.removeFront()
+    lastItem = dequeue.removeBack()
+    if (firstItem !== lastItem) {
+      isEqual = false
+    }
+  }
+
+  return isEqual
+}
+```
 
 ## 第 6 章　链表
 ## 第 7 章　集合
