@@ -438,6 +438,63 @@ function palindromeChecker (str) {
 ```
 
 ## 第 6 章　链表
+
+- 链表和数组一样都是有序的元素集合；
+- 数组的缺点：
+  - 数组存储必须使用连续的物理空间，那么在数据量较大或者系统空间碎片较多时不易存储；
+  - 数组的大小是固定的，从数组的起点或中间插入或移除项的成本很高，因为需要移动元素。
+
+### 单链表
+
+```js
+// 辅助函数 - 比较是否相等
+function defaultEquals (a, b) {
+  return a === b
+}
+
+// 辅助类 - 表示想要添加到链表中的项
+class Node {
+  constructor (element) {
+    this.element = element
+    this.next = undefined
+  }
+}
+
+class LinkedList {
+  constructor (equalsFn = defaultEquals) {
+    this.count = 0 // 元素数量
+    this.head = undefined
+    this.equalsFn = equalsFn
+  }
+
+  // 向列表尾部添加一个新元素
+  push (element) {}
+  // 向链表指定位置插入一个元素
+  insert (element, position) {}
+  // 返回链表中特定位置的元素
+  getElementAt (index) {}
+  // 返回元素在链表中的索引
+  indexOf (element) {}
+  // 从链表中移除一个元素
+  remove (element) {}
+  // 从链表的特定位置移除一个元素
+  removeAt (position) {}
+
+  // 链表是否为空
+  isEmpty () {}
+  // 链表包含的元素个数
+  size () {}
+  // 返回表示整个链表的字符串
+  toString () {}
+}
+```
+
+### 双向链表
+
+### 循环链表
+
+### 有序链表
+
 ## 第 7 章　集合
 ## 第 8 章　字典和散列表
 ## 第 9 章　递归
