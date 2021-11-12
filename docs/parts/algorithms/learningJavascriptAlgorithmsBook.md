@@ -463,12 +463,28 @@ class Node {
 class LinkedList {
   constructor (equalsFn = defaultEquals) {
     this.count = 0 // 元素数量
-    this.head = undefined
+    this.head = undefined // 指向第一个元素
     this.equalsFn = equalsFn
   }
 
   // 向列表尾部添加一个新元素
-  push (element) {}
+  push (element) {
+    const node = new Node(element)
+    let current
+    // 链表中没有元素时，head 直接指向 node
+    if (this.head === null) {
+      this.head = node
+    } else {
+      // 链表中已有元素时，需要先找到最后一个元素
+      // current 用来指向最后一个元素
+      current = this.head
+      while (current.next !== null) {
+        current = current.next
+      }
+      current.next = node
+    }
+    this.count++
+  }
   // 向链表指定位置插入一个元素
   insert (element, position) {}
   // 返回链表中特定位置的元素
@@ -478,7 +494,26 @@ class LinkedList {
   // 从链表中移除一个元素
   remove (element) {}
   // 从链表的特定位置移除一个元素
-  removeAt (position) {}
+  removeAt (index) {
+    if (index >= 0 && index < this.count) {
+      let current = this.head
+      // 移除第一项
+      if (index === 0) {
+        this.head = current.next
+      } else {
+        let previous
+        for (let i = 0; i < index; i++) {
+          previous = current
+          current = current.next
+        }
+        // 将 previous 与 current 的下一项链接起来：跳过 current，从而移除它
+        previous.next = current.next
+      }
+      this.count--
+      return current.element
+    }
+    return undefined
+  }
 
   // 链表是否为空
   isEmpty () {}
