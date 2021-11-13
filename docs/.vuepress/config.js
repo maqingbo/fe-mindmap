@@ -42,7 +42,12 @@ module.exports = {
       { title: '浏览器', children: ['/parts/browser/', '/parts/browser/render'] },
       { title: 'HTTP', children: ['/parts/http/'] },
       { title: '前端工程化', children: ['/parts/engineering/'] },
-      { title: '数据结构与算法', children: ['/parts/algorithms/'] },
+      {
+        title: '数据结构与算法', children: [
+          '/parts/algorithms/',
+          '/parts/algorithms/learningJavascriptAlgorithmsBook'
+        ]
+      },
       { title: '框架', children: ['/parts/frame/'] },
       { title: '网站安全', children: ['/parts/safe/'] }
     ]
