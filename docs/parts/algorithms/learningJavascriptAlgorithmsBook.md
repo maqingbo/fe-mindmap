@@ -430,7 +430,9 @@ function palindromeChecker (str) {
   - 数组存储必须使用连续的物理空间，那么在数据量较大或者系统空间碎片较多时不易存储；
   - 数组的大小是固定的，从数组的起点或中间插入或移除项的成本很高，因为需要移动元素。
 
-### 单链表
+### 单向链表/普通链表
+
+![](../../images/algorithms/LinkedList.png)
 
 ```js
 // 辅助函数 - 比较是否相等
@@ -471,14 +473,51 @@ class LinkedList {
     }
     this.count++
   }
-  // 向链表指定位置插入一个元素
-  insert (element, position) {}
   // 返回链表中特定位置的元素
-  getElementAt (index) {}
+  getElementAt (index) {
+    if (index >= 0 && index <= this.count) {
+      let node = this.head
+      for (let i = 0; i < index && node !== null; i++) {
+        node = node.next
+      }
+      return node
+    }
+    return undefined
+  }
+  // 向链表指定位置插入一个元素
+  insert (element, position) {
+    if (index >= 0 && index <= this.count) {
+      const node = new Node(element)
+      if (index === 0) {
+        const current = this.head
+        node.next = current
+        this.head = node
+      } else {
+        const previous = this.getElementAt(index - 1)
+        node.next = previous.next
+        previous.next = node
+      }
+      this.count++
+      return true
+    }
+    return false
+  }
   // 返回元素在链表中的索引
-  indexOf (element) {}
+  indexOf (element) {
+    let current = this.head;
+    for (let i = 0; i < this.size() && current !== null i++) {
+      if (this.equalsFn(element, current.element)) {
+        return i
+      }
+      current = current.next
+    }
+    return -1
+  }
   // 从链表中移除一个元素
-  remove (element) {}
+  remove (element) {
+    const index = this.indexOf(element)
+    return this.removeAt(index)
+  }
   // 从链表的特定位置移除一个元素
   removeAt (index) {
     if (index >= 0 && index < this.count) {
@@ -502,15 +541,39 @@ class LinkedList {
   }
 
   // 链表是否为空
-  isEmpty () {}
+  isEmpty () {
+    return this.size() === 0
+  }
   // 链表包含的元素个数
-  size () {}
+  size () {
+    return this.count
+  }
+  getHead() {
+    return this.head
+  }
   // 返回表示整个链表的字符串
-  toString () {}
+  toString () {
+    if (this.head == null) {
+      return ''
+    }
+    let objString = `${this.head.element}`
+    let current = this.head.next
+    for (let i = 1; i < this.size() && current != null; i++) {
+      objString = `${objString},${current.element}`
+      current = current.next
+    }
+    return objString
+  }
 }
 ```
 
 ### 双向链表
+
+双向链表和普通链表的区别在于，在普通链表中，一个节点只有链向下一个节点的链接；而在双向链表中，链接是双向的：一个链向下一个元素，另一个链向前一个元素。
+
+![](../../images/algorithms/DoublyLinkedList.png)
+
+
 
 ### 循环链表
 
