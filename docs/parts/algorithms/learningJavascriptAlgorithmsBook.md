@@ -4,25 +4,9 @@ title: '学习 JavaScript 数据结构与算法'
 
 # 学习 JavaScript 数据结构与算法（第 3 版）
 
-## 本书结构
-
-- 第 1 章：“JavaScript 简介”，讲述了 JavaScript 的基础知识。
-- 第 2 章：“ECMAScript 和 TypeScript 概述”。
-- 第 3 章：“数组”，介绍了如何使用数组这种最基础且最常用的数据结构。
-- 第 4 章：“栈”，如何创建栈以及怎样添加和删除元素，如何用栈解决计算机科学中的一些问题。
-- 第 5 章：“队列和双端队列”，如何创建队列，以及如何添加和删除队列中的元素。也介绍了一种特殊的队列——双端队列数据结构，以及栈和队列的主要区别。
-- 第 6 章：“链表”，讲解如何用对象和指针从头创建链表这种数据结构。这一章除了讨论如何声明、创建、添加和删除链表元素之外，还介绍了不同类型的链表，例如双向链表和循环链表。
-- 第 7 章：“集合”，介绍了集合这种数据结构，讨论了如何用集合存储非重复性的元素。此外，还详述了对集合的各种操作以及相应代码的实现。
-- 第 8 章：“字典和散列表”，深入讲解字典、散列表及它们之间的区别。这一章介绍了这两种数据结构是如何声明、创建和使用的，还探讨了如何解决散列冲突，以及如何创建更高效的散列函数。
-- 第 9 章：“递归”，介绍了递归的概念，描述了声明式和递归式算法之间的区别。
-- 第 10 章：“树”，讲解了树这种数据结构和它的相关术语，重点讨论了二叉搜索树，以及如何在树中搜索、遍历、添加和删除节点。这一章还介绍了自平衡树，包括 AVL 树和红黑树。
-- 第 11 章：“二叉堆和堆排序”，介绍了最小堆和最大堆数据结构，以及怎样使用堆作为一个优先队列，还讨论了著名的堆排序算法。
-- 第 12 章：“图”，介绍了图这种数据结构和它的适用范围。这一章讲述了图的常用术语和不同表示方式，探讨了如何使用深度优先搜索算法和广度优先搜索算法遍历图，以及它们的适用范围。
-- 第 13 章：“排序和搜索算法”，探讨了常用的排序算法，如冒泡排序（包括改进版）、选择排序、插入排序、归并排序和快速排序。这一章还介绍了计数排序和基数排序这两种分布式排序算法，搜索算法中的顺序搜索和二分搜索，以及怎样随机排列一个数组。
-- 第 14 章：“算法设计与技巧”， 介绍了一些算法技巧和著名的算法，以及 JavaScript 函数式编程。
-- 第 15 章：“算法复杂度”，介绍了大 O 表示法的概念，以及本书实现算法的复杂度列表。这一章还介绍了 NP 完全问题和启发式算法。最后，讲解了提升算法能力的诀窍。
-
 ## 第 1 章　JavaScript 简介
+
+讲述了 JavaScript 的基础知识。
 
 ### 相等运算符（== 和 ===）
 
@@ -76,6 +60,8 @@ console.log('packt' == true) // false
 没啥新鲜的，只是一个大概的介绍，略。
 
 ## 第 3 章　数组
+
+介绍了如何使用数组这种最基础且最常用的数据结构。
 
 数组存储一系列同一种数据类型的值。虽然在 JavaScript 里，也可以在数组中保存不同类型的值，但我们还是遵守最佳实践，避免这么做（大多数语言都没这个能力）。
 
@@ -308,7 +294,7 @@ function hotPotato (itemList, num) {
     for (let i = 0; i < num; i++) {
       queue.enqueue(queue.dequeueue())
     }
-    // 淘汰队列的第一个（尽然顺序已乱，淘汰的就是随机的）
+    // 淘汰队列的第一个（队列顺序已乱，淘汰是随机的）
     eliminatedList.push(queue.dequeueue())
   }
 
@@ -444,7 +430,9 @@ function palindromeChecker (str) {
   - 数组存储必须使用连续的物理空间，那么在数据量较大或者系统空间碎片较多时不易存储；
   - 数组的大小是固定的，从数组的起点或中间插入或移除项的成本很高，因为需要移动元素。
 
-### 单链表
+### 单向链表/普通链表
+
+![](../../images/algorithms/LinkedList.png)
 
 ```js
 // 辅助函数 - 比较是否相等
@@ -485,14 +473,51 @@ class LinkedList {
     }
     this.count++
   }
-  // 向链表指定位置插入一个元素
-  insert (element, position) {}
   // 返回链表中特定位置的元素
-  getElementAt (index) {}
+  getElementAt (index) {
+    if (index >= 0 && index <= this.count) {
+      let node = this.head
+      for (let i = 0; i < index && node !== null; i++) {
+        node = node.next
+      }
+      return node
+    }
+    return undefined
+  }
+  // 向链表指定位置插入一个元素
+  insert (element, position) {
+    if (index >= 0 && index <= this.count) {
+      const node = new Node(element)
+      if (index === 0) {
+        const current = this.head
+        node.next = current
+        this.head = node
+      } else {
+        const previous = this.getElementAt(index - 1)
+        node.next = previous.next
+        previous.next = node
+      }
+      this.count++
+      return true
+    }
+    return false
+  }
   // 返回元素在链表中的索引
-  indexOf (element) {}
+  indexOf (element) {
+    let current = this.head;
+    for (let i = 0; i < this.size() && current !== null i++) {
+      if (this.equalsFn(element, current.element)) {
+        return i
+      }
+      current = current.next
+    }
+    return -1
+  }
   // 从链表中移除一个元素
-  remove (element) {}
+  remove (element) {
+    const index = this.indexOf(element)
+    return this.removeAt(index)
+  }
   // 从链表的特定位置移除一个元素
   removeAt (index) {
     if (index >= 0 && index < this.count) {
@@ -516,15 +541,39 @@ class LinkedList {
   }
 
   // 链表是否为空
-  isEmpty () {}
+  isEmpty () {
+    return this.size() === 0
+  }
   // 链表包含的元素个数
-  size () {}
+  size () {
+    return this.count
+  }
+  getHead() {
+    return this.head
+  }
   // 返回表示整个链表的字符串
-  toString () {}
+  toString () {
+    if (this.head == null) {
+      return ''
+    }
+    let objString = `${this.head.element}`
+    let current = this.head.next
+    for (let i = 1; i < this.size() && current != null; i++) {
+      objString = `${objString},${current.element}`
+      current = current.next
+    }
+    return objString
+  }
 }
 ```
 
 ### 双向链表
+
+双向链表和普通链表的区别在于，在普通链表中，一个节点只有链向下一个节点的链接；而在双向链表中，链接是双向的：一个链向下一个元素，另一个链向前一个元素。
+
+![](../../images/algorithms/DoublyLinkedList.png)
+
+
 
 ### 循环链表
 
