@@ -2,20 +2,13 @@
 title: '概览'
 ---
 
-## 浏览器端 JS
+JavaScript 的语言规范是由 ECMA 委员会制定的，所以又称为 ECMAscript。
 
-- ECMAScript
-- Web API
-  - DOM（文档）
-  - XMLHTTPRequest（网络）
-  - Canvas、WebGL（图形）
-  - Audio、Video（音视频）
-  - localstorage、sessionStorage（存储）
-  - Window
-  - Navigator
-  - History
-  - Location
-  - ......
+我们平时说的 JavaScript，一般指运行环境为浏览器的 ECMAscript，除此之外，Nodejs 也是常见的一个运行环境。
+
+在不同的环境里，人们赋予这门语言不同的能力（API），做不同的事情。
+
+## 浏览器端 JS
 
 《JavaScript 高级程序设计》第四版将浏览器端 JavaScript 概括为 ECMAscript + DOM + BOM，而 MDN 网站现已将 JavaScript 概括为 ECMAScript + Web API，其中 DOM 属于 Web API 中的一员，而 BOM 则被打散在了 Web API 中。
 
@@ -25,6 +18,8 @@ title: '概览'
 
 ## Nodejs
 
-客户端 JS 的相同之处：都使用 ECMAScript 作为基本语法；
+与浏览器端 JS 的相同之处：都使用 ECMAScript 作为基本语法；
 
-不同之处：因为 Nodejs 是服务端，所以客户端 JS 中的那些 Web APIS 是无法使用的，但是 nodejs 中定义了自己在 server 端特有的 API，例如 http fs Stream os 等。
+不同之处：在 Nodejs 环境下，客户端 JS 中的那些 Web API 是无法使用的，但是 nodejs 中定义了自己特有的 API，例如 http、fs、Stream、os 等。
+
+![](../../images/overView/02.png)
