@@ -1,12 +1,8 @@
 ---
-title: '手写系列-常见需求'
+title: '手写系列'
 ---
 
-## 参考
-
-- [死磕 36 个 JS 手写题](https://juejin.cn/post/6946022649768181774#heading-45)
-
-## 数据类型判断
+## typeof
 
 typeof 可以正确识别：Undefined、Boolean、Number、String、Symbol、Function 等类型的数据，但是对于其他的都会认为是 object，比如 Null、Date 等，所以通过 typeof 来判断数据类型会不准确。但是可以使用 Object.prototype.toString 实现。
 
@@ -20,131 +16,215 @@ typeOf({})        // 'object'
 typeOf(new Date)  // 'date'
 ```
 
-## 继承
+## instanceof
 
-### 原型链继承
+instanceof 运算符用于检测构造函数的 prototype 属性是否出现在某个实例对象的原型链上。
 
 ```js
-function Animal() {
-    this.colors = ['black', 'white']
-}
-Animal.prototype.getColor = function() {
-    return this.colors
-}
-function Dog() {}
-Dog.prototype =  new Animal()
+function _instanceof(L, R) {
+  const O = R.prototype
+  L = L.__proto__
 
-let dog1 = new Dog()
-dog1.colors.push('brown')
-let dog2 = new Dog()
-console.log(dog2.colors)  // ['black', 'white', 'brown']
+  while(true) {
+    if (L === null) return false
+    if (L === O) return true
+    L = L.__proto__
+  }
+}
 ```
 
-原型链继承存在的问题：
+## new
 
-*   问题 1：原型中包含的引用类型属性将被所有实例共享；
-*   问题 2：子类在实例化的时候不能给父类构造函数传参；
+new 做了什么：
 
-### 借用构造函数实现继承
+1. 创建一个空的简单 JavaScript 对象（即`{}`）；
+1. 为这个新创建的对象添加属性`__proto__`，将该属性链接至构造函数的原型对象 ；
+2. 将新创建的对象作为 this 的上下文 ；
+3. 如果该函数没有返回对象，则返回 this。
+
+代码实现：
 
 ```js
-function Animal(name) {
-    this.name = name
-    this.getName = function() {
-        return this.name
+function _new(Ctor) {
+  if (typeof Ctor !== 'function') {
+    throw new TypeError(Ctor + ' is not a constructor')
+  }
+
+  // es6
+  _new.target = Ctor
+  const obj = Object.create(Ctor.prototype) // 步骤 1，2，4
+  const args = [].slice(arguments, 1)
+  const result = Ctor.apply(obj, args) // 步骤 3
+  const isObject = result !== null && typeof result === 'object'
+  const isFunction = typeof result === 'function'
+  if (isObject || isFunction) { // 步骤 5
+    return result
+  }
+  return obj
+}
+```
+
+参考：[能否模拟实现 JS 的 new 操作符 — 若川](https://juejin.cn/post/6844903704663949325)
+
+## apply
+
+## call
+
+## bind
+
+## Promise
+
+## 调度器
+
+```js
+class Scheduler {
+  constructor () {
+    this.task = []
+    this.curringRuning = 0
+  }
+
+  add (promiseCreator) {
+    return new Promise((resolve) => {
+      this.task.push(() => promiseCreator().then(() => resolve()))
+      // 控制最多执行两个
+      if (this.curringRuning < 2) this.doTask()
+    })
+  }
+
+  doTask () {
+    if (this.task.length > 0) {
+      const runTask = this.task.shift()
+      this.curringRuning++
+      runTask().then(() => { // 完成 1 个后，开始下一个，保证最多执行 2 个
+        this.curringRuning--
+        this.doTask()
+      })
     }
+  }
 }
-function Dog(name) {
-    Animal.call(this, name)
-}
-Dog.prototype =  new Animal()
+
+module.exports = Scheduler
 ```
 
-借用构造函数实现继承解决了原型链继承的 2 个问题：引用类型共享问题以及传参问题。但是由于方法必须定义在构造函数中，所以会导致每次创建子类实例都会创建一遍方法。
+## deepClone
 
-### 组合继承
+**浅拷贝**：创建一个新对象，这个对象有着原始对象属性值的一份精确拷贝。如果属性是基本类型，拷贝的就是基本类型的值，如果属性是引用类型，拷贝的就是内存地址 ，所以如果其中一个对象改变了这个地址，就会影响到另一个对象。
 
-组合继承结合了原型链和盗用构造函数，将两者的优点集中了起来。基本的思路是使用原型链继承原型上的属性和方法，而通过盗用构造函数继承实例属性。这样既可以把方法定义在原型上以实现重用，又可以让每个实例都有自己的属性。
+**深拷贝**：将一个对象从内存中完整的拷贝一份出来，从堆内存中开辟一个新的区域存放新对象，且修改新对象不会影响原对象
+
+简单版（仅支持数组和对象）：
 
 ```js
-function Animal(name) {
-    this.name = name
-    this.colors = ['black', 'white']
-}
-Animal.prototype.getName = function() {
-    return this.name
-}
-function Dog(name, age) {
-    Animal.call(this, name)
-    this.age = age
-}
-Dog.prototype =  new Animal()
-Dog.prototype.constructor = Dog
-
-let dog1 = new Dog('奶昔', 2)
-dog1.colors.push('brown')
-let dog2 = new Dog('哈赤', 1)
-console.log(dog2) 
-// { name: "哈赤", colors: ["black", "white"], age: 1 }
+const deepClone = obj => {
+  if (obj === null) return null;
+  let clone = Object.assign({}, obj);
+  Object.keys(clone).forEach(
+    key =>
+      (clone[key] =
+        typeof obj[key] === 'object' ? deepClone(obj[key]) : obj[key])
+  );
+  if (Array.isArray(obj)) {
+    clone.length = obj.length;
+    return Array.from(clone);
+  }
+  return clone;
+};
 ```
 
-### 寄生式组合继承
+## EventEmitter
 
-组合继承已经相对完善了，但还是存在问题，它的问题就是调用了 2 次父类构造函数，第一次是在 new Animal()，第二次是在 Animal.call() 这里。
+## jsonp
 
-所以解决方案就是不直接调用父类构造函数给子类原型赋值，而是通过创建空函数 F 获取父类原型的副本。
+**是什么**：jsonp（JSON with Padding）是 json 的一种"使用方法"，不是一种单独的技术。
+**原理**：利用 script 标签的 src 没有跨域限制来完成跨域目的。
+**过程：**
 
-寄生式组合继承写法上和组合继承基本类似，区别是如下这里：
+- 前端定义一个解析函数：`const jsonpCallBackFn = function (res) {}`；
+- 通过 params 的形式包装 script 标签的请求参数，并且声明执行函数，如：`cb = jsonpCallBackFn`；
+- 后端获取前端声明的执行函数（jsonpCallBackFn），并且带上参数且通过调用函数的方式传递给前端；
+- 前端在 script 标签返回资源的时候就会执行 jsonpCallBackFn，后端返回的数据就填充（padding）在 jsonpCallBackFn 的参数之中。
+
+**例子**：
+
+- 如客户想访问：`https://www.baidu.com/jsonp.php?cb=jsonpCallBackFn`；
+- 假设客户期望返回数据：`["data1","data2"]`；
+- 真正返回到客户端的数据显示为：`jsonpCallBackFn(["data1","data2"])`；
+- jsonp 中的`p`，就是 padding（填充） 的意思，把数据填充到了函数的参数位置。
+
+**优点**：兼容性好，低版本的浏览器中可使用；
+**缺点**：只能进行 get 请求；
 
 ```js
-function F() {}
-F.prototype = Animal.prototype
-let f = new F()
-f.constructor = Dog
-Dog.prototype = f
-```
+// 简单版本 - 只能进行一次请求
+// 调用多次时，因为 callbackName 相同，后一个的覆盖掉前面的。
+function JSONP ({
+  url,
+  params = {},
+  callbackKey = 'cb',
+  callback
+}) {
+  // 定义本地的一个 callback 的名称
+  const callbackName = 'jsonpCallback';
+  // 把这个名称加入到参数中：'cb=jsonpCallback'
+  params[callbackKey] = callbackName;
+  //  把这个 callback 加入到 window 对象中，这样就能执行这个回调了
+  window[callbackName] = callback;
 
-稍微封装下上面添加的代码后：
+  // 得到'id=1&cb=jsonpCallback'
+  const paramString = Object.keys(params).map(key => {
+    return `${key}=${encodeURIComponent(params[key])}`
+  }).join('&')
+  // 创建 script 标签
+  const script = document.createElement('script');
+  script.setAttribute('src', `${url}?${paramString}`);
+  document.body.appendChild(script);
+}
+
+JSONP({
+  url: 'http://localhost:8080/api/jsonp',
+  params: { id: 1 },
+  callbackKey: 'cb',
+  callback (res) {
+    console.log(res)
+  }
+})
+```
 
 ```js
-function object(o) {
-    function F() {}
-    F.prototype = o
-    return new F()
-}
-function inheritPrototype(child, parent) {
-    let prototype = object(parent.prototype)
-    prototype.constructor = child
-    child.prototype = prototype
-}
-inheritPrototype(Dog, Animal)
-```
+// 完整版 - 可多次调用
+// 让 callbackName 是一个唯一的，可以使用 id 递增的方式
+// 把回调定义在 JSONP.callbacks 数组上，避免污染全局环境
+function JSONP ({
+  url,
+  params = {},
+  callbackKey = 'cb',
+  callback
+}) {
+  // 定义本地的唯一 callbackId，若是没有的话则初始化为 1
+  JSONP.callbackId = JSONP.callbackId || 1;
+  let callbackId = JSONP.callbackId;
+  // 把要执行的回调加入到 JSON 对象中，避免污染 window
+  JSONP.callbacks = JSONP.callbacks || [];
+  JSONP.callbacks[callbackId] = callback;
+  // 把这个名称加入到参数中：'cb=JSONP.callbacks[1]'
+  params[callbackKey] = `JSONP.callbacks[${callbackId}]`;
 
-如果你嫌弃上面的代码太多了，还可以基于组合继承的代码改成最简单的寄生式组合继承：
+  // 得到'id=1&cb=JSONP.callbacks[1]'
+  const paramString = Object.keys(params).map(key => {
+    return `${key}=${encodeURIComponent(params[key])}`
+  }).join('&')
 
-```js
-Dog.prototype =  Object.create(Animal.prototype)
-Dog.prototype.constructor = Dog
-```
+  // 创建 script 标签
+  const script = document.createElement('script');
+  script.setAttribute('src', `${url}?${paramString}`);
+  document.body.appendChild(script);
 
-### class 实现继承
-
-```js
-class Animal {
-    constructor(name) {
-        this.name = name
-    } 
-    getName() {
-        return this.name
-    }
-}
-class Dog extends Animal {
-    constructor(name, age) {
-        super(name)
-        this.age = age
-    }
+  // id 自增，保证唯一
+  JSONP.callbackId++;
 }
 ```
+
+参考：[JSONP 原理及实现 - 简书](https://www.jianshu.com/p/88bb82718517)
 
 ## 数组去重
 
@@ -346,70 +426,7 @@ function parseParam(url) {
 }
 ```
 
-## 字符串模板
-
-```js
-function render(template, data) {
-    const reg = /\{\{(\w+)\}\}/; // 模板字符串正则
-    if (reg.test(template)) { // 判断模板里是否有模板字符串
-        const name = reg.exec(template)[1]; // 查找当前模板里第一个模板字符串的字段
-        template = template.replace(reg, data[name]); // 将第一个模板字符串渲染
-        return render(template, data); // 递归的渲染并返回渲染后的结构
-    }
-    return template; // 如果模板没有模板字符串直接返回
-}
-```
-
-测试：
-
-```js
-let template = '我是{{name}}，年龄{{age}}，性别{{sex}}';
-let person = {
-    name: '布兰',
-    age: 12
-}
-render(template, person); // 我是布兰，年龄 12，性别 undefined
-```
-
-## 图片懒加载
-
-与普通的图片懒加载不同，如下这个多做了 2 个精心处理：
-
-*   图片全部加载完成后移除事件监听；
-*   加载完的图片，从 imgList 移除；
-
-```js
-let imgList = [...document.querySelectorAll('img')]
-let length = imgList.length
-
-// 修正错误，需要加上自执行
-const imgLazyLoad = (function() {
-    let count = 0
-
-   return function() {
-        let deleteIndexList = []
-        imgList.forEach((img, index) => {
-            let rect = img.getBoundingClientRect()
-            if (rect.top < window.innerHeight) {
-                img.src = img.dataset.src
-                deleteIndexList.push(index)
-                count++
-                if (count === length) {
-                    document.removeEventListener('scroll', imgLazyLoad)
-                }
-            }
-        })
-        imgList = imgList.filter((img, index) => !deleteIndexList.includes(index))
-   }
-})()
-
-// 这里最好加上防抖处理
-document.addEventListener('scroll', imgLazyLoad)
-```
-
-参考：[图片懒加载](https://juejin.cn/post/6844903856489365518#heading-19 "https://juejin.cn/post/6844903856489365518#heading-19")
-
-## 函数防抖
+## 函数防抖（debounce）
 
 触发高频事件 N 秒后只会执行一次，如果 N 秒内事件再次触发，则会重新计时。
 
@@ -492,7 +509,7 @@ setUseAction.cancel()
 
 参考：[JavaScript 专题之跟着 underscore 学防抖](https://link.juejin.cn/?target=https://github.com/mqyqingfeng/Blog/issues/22 "https://github.com/mqyqingfeng/Blog/issues/22")
 
-## 函数节流
+## 函数节流（throttle）
 
 触发高频事件，且 N 秒内只执行一次。
 
@@ -678,3 +695,7 @@ const getJSON = function(url) {
   })
 }
 ```
+
+## 参考
+
+- [死磕 36 个 JS 手写题](https://juejin.cn/post/6946022649768181774#heading-45)

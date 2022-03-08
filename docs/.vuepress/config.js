@@ -16,7 +16,10 @@ module.exports = {
       {
         title: 'HTML',
         collapsable: false,
-        children: ['/parts/html/']
+        children: [
+          '/parts/html/',
+          ['/parts/html/interview', '面试题']
+      ]
       },
       {
         title: 'CSS',
@@ -30,7 +33,8 @@ module.exports = {
           '/parts/css/stackingContext',
           '/parts/css/preprocessor',
           '/parts/css/sass-mixin',
-          '/parts/css/bestPractice'
+          '/parts/css/bestPractice',
+          ['/parts/css/interview', '面试题']
         ]
       },
       {
@@ -40,7 +44,7 @@ module.exports = {
           '/parts/javascript/01-inBox',
           '/parts/javascript/02-overView',
           '/parts/javascript/03-keyConcepts',
-          '/parts/javascript/11-executionContext',
+          ['/parts/javascript/04-async', '异步编程'],
           '/parts/javascript/20-handWritten'
         ]
       },

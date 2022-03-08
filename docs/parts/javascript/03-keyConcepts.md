@@ -20,11 +20,3 @@ title: '重点难点'
 
 ## 继承
 
-## 事件循环
-
-## 异步
-
-- promise
-- async/await
-- 宏任务和微任务
-- event loop 模型
