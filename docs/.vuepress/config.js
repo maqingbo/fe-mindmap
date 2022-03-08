@@ -8,9 +8,9 @@ module.exports = {
   ],
   plugins: ['@vuepress/medium-zoom'],
   themeConfig: {
-    displayAllHeaders: true,
+    displayAllHeaders: false,
     lastUpdated: '上次更新',
-    sidebarDepth: 0,
+    sidebarDepth: 1,
     sidebar: [
       { title: '总览', path: '/parts/map/' },
       {
