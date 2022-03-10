@@ -133,10 +133,12 @@ const deepClone = obj => {
 
 ## EventEmitter
 
-## jsonp
+## JSONP
 
 **是什么**：jsonp（JSON with Padding）是 json 的一种"使用方法"，不是一种单独的技术。
+
 **原理**：利用 script 标签的 src 没有跨域限制来完成跨域目的。
+
 **过程：**
 
 - 前端定义一个解析函数：`const jsonpCallBackFn = function (res) {}`；
@@ -152,7 +154,10 @@ const deepClone = obj => {
 - jsonp 中的`p`，就是 padding（填充） 的意思，把数据填充到了函数的参数位置。
 
 **优点**：兼容性好，低版本的浏览器中可使用；
+
 **缺点**：只能进行 get 请求；
+
+**代码实现**：
 
 ```js
 // 简单版本 - 只能进行一次请求
@@ -192,7 +197,7 @@ JSONP({
 
 ```js
 // 完整版 - 可多次调用
-// 让 callbackName 是一个唯一的，可以使用 id 递增的方式
+// 让 callbackName 保持唯一，可以使用 id 递增的方式
 // 把回调定义在 JSONP.callbacks 数组上，避免污染全局环境
 function JSONP ({
   url,
@@ -225,6 +230,34 @@ function JSONP ({
 ```
 
 参考：[JSONP 原理及实现 - 简书](https://www.jianshu.com/p/88bb82718517)
+
+## Ajax
+
+一个完整的 AJAX 请求一般包括以下步骤：
+
+- 实例化 XMLHttpRequest 对象
+- 连接服务器
+- 发送请求
+- 接收响应数据
+
+```js
+const getJSON = function(url) {
+  return new Promise((resolve, reject) => {
+    const xhr = XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Mscrosoft.XMLHttp');
+    xhr.open('GET', url, false);
+    xhr.setRequestHeader('Accept', 'application/json');
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState !== 4) return;
+      if (xhr.status === 200 || xhr.status === 304) {
+        resolve(xhr.responseText);
+      } else {
+        reject(new Error(xhr.responseText));
+      }
+    }
+    xhr.send();
+  })
+}
+```
 
 ## 数组去重
 
@@ -644,55 +677,6 @@ function partial(fn, ...args) {
         args[index] = 
         return fn(...args, ...arg)
     }
-}
-```
-
-## JSONP
-
-JSONP 核心原理：script 标签不受同源策略约束，所以可以用来进行跨域请求，优点是兼容性好，但是只能用于 GET 请求；
-
-```js
-const jsonp = ({ url, params, callbackName }) => {
-    const generateUrl = () => {
-        let dataSrc = ''
-        for (let key in params) {
-            if (params.hasOwnProperty(key)) {
-                dataSrc += `${key}=${params[key]}&`
-            }
-        }
-        dataSrc += `callback=${callbackName}`
-        return `${url}?${dataSrc}`
-    }
-    return new Promise((resolve, reject) => {
-        const scriptEle = document.createElement('script')
-        scriptEle.src = generateUrl()
-        document.body.appendChild(scriptEle)
-        window[callbackName] = data => {
-            resolve(data)
-            document.removeChild(scriptEle)
-        }
-    })
-}
-```
-
-## AJAX
-
-```js
-const getJSON = function(url) {
-  return new Promise((resolve, reject) => {
-    const xhr = XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Mscrosoft.XMLHttp');
-    xhr.open('GET', url, false);
-    xhr.setRequestHeader('Accept', 'application/json');
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState !== 4) return;
-      if (xhr.status === 200 || xhr.status === 304) {
-        resolve(xhr.responseText);
-      } else {
-        reject(new Error(xhr.responseText));
-      }
-    }
-    xhr.send();
-  })
 }
 ```
 

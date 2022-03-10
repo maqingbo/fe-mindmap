@@ -4,7 +4,7 @@ title: '概览'
 
 JavaScript 的语言规范是由 ECMA 委员会制定的，所以又称为 ECMAscript。
 
-我们平时说的 JavaScript，一般指运行环境为浏览器的 ECMAscript，除此之外，Nodejs 也是常见的一个运行环境。
+我们平时说的 JavaScript，一般指运行环境为浏览器的 JavaScript，除此之外，Nodejs 也是常见的一个运行环境。
 
 在不同的环境里，人们赋予这门语言不同的能力（API），做不同的事情。
 

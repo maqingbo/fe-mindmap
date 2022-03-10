@@ -2,12 +2,7 @@
 title: '收集箱'
 ---
 
-- [执行上下文和执行栈](./11-executionContext.md)
-## 第二部分 面向对象和 this
-
-## DOM、BOM 及事件处理机制
-
-**JS 原生拖拽节点**
+## JS 原生拖拽节点
 
 给需要拖拽的节点绑定 mousedown ，mousemove ，mouseup 事件。
 mousedown 事件触发后，开始拖拽。

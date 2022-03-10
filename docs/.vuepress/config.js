@@ -44,8 +44,12 @@ module.exports = {
           '/parts/javascript/01-inBox',
           '/parts/javascript/02-overView',
           '/parts/javascript/03-keyConcepts',
-          ['/parts/javascript/04-async', '异步编程'],
-          '/parts/javascript/20-handWritten'
+          ['/parts/javascript/04-closure', '闭包'],
+          ['/parts/javascript/06-function', '函数'],
+          ['/parts/javascript/05-prototype', '原型与继承'],
+          ['/parts/javascript/07-async', '异步编程'],
+          ['/parts/javascript/DOM', 'DOM'],
+          '/parts/javascript/handWritten'
         ]
       },
       {
