@@ -10,7 +10,7 @@ module.exports = {
   themeConfig: {
     displayAllHeaders: false,
     lastUpdated: '上次更新',
-    sidebarDepth: 1,
+    sidebarDepth: 2,
     sidebar: [
       { title: '总览', path: '/parts/map/' },
       {
@@ -65,7 +65,15 @@ module.exports = {
       {
         title: '浏览器',
         collapsable: false,
-        children: ['/parts/browser/', '/parts/browser/render']
+        children: [
+          ['/parts/browser/', '收集箱'],
+          ['/parts/browser/render', '内部原理'],
+          ['/parts/browser/domain', '跨域'],
+          ['/parts/browser/storage', '本地存储'],
+          ['/parts/browser/cache', '缓存'],
+          ['/parts/browser/client', '客户端能力'],
+          ['/parts/browser/interview', '面试题']
+        ]
       },
       {
         title: 'HTTP',

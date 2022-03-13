@@ -1,0 +1,2 @@
+- jsbridge（如微信 jssdk）
+- js 调起 app
