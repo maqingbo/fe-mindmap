@@ -6,6 +6,9 @@ module.exports = {
   head: [
     ['link', { rel: 'icon', href: '/images/icon.png' }]
   ],
+  markdown: {
+    lineNumbers: true
+  },
   plugins: ['@vuepress/medium-zoom'],
   themeConfig: {
     displayAllHeaders: false,
@@ -48,14 +51,8 @@ module.exports = {
           ['/parts/javascript/function', '函数'],
           ['/parts/javascript/prototype', '原型与继承'],
           ['/parts/javascript/async', '异步编程'],
-          ['/parts/javascript/DOM', 'DOM'],
           '/parts/javascript/handWritten'
         ]
-      },
-      {
-        title: 'ECMA Script',
-        collapsable: false,
-        children: ['/parts/ECMA/']
       },
       {
         title: 'Web APIs',

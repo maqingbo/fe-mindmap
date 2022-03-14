@@ -2,4 +2,7 @@
 title: '收集箱'
 ---
 
-TODO
+- XMLHttpRequest
+- Canvas
+- setTimeOut、setInterVal
+- WebSocket
