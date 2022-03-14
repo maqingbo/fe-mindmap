@@ -41,13 +41,13 @@ module.exports = {
         title: 'JavaScript',
         collapsable: false,
         children: [
-          '/parts/javascript/inBox',
-          '/parts/javascript/overView',
-          ['/parts/javascript/execution', 'JS 执行过程'],
-          ['/parts/javascript/closure', '闭包'],
-          ['/parts/javascript/function', '函数'],
-          ['/parts/javascript/prototype', '原型与继承'],
-          ['/parts/javascript/async', '异步编程'],
+          '/parts/javascript/01-inBox',
+          '/parts/javascript/02-overView',
+          ['/parts/javascript/03-keyConcepts', '关键概念'],
+          ['/parts/javascript/04-closure', '闭包'],
+          ['/parts/javascript/06-function', '函数'],
+          ['/parts/javascript/05-prototype', '原型与继承'],
+          ['/parts/javascript/07-async', '异步编程'],
           ['/parts/javascript/DOM', 'DOM'],
           '/parts/javascript/handWritten'
         ]
@@ -78,7 +78,7 @@ module.exports = {
         title: '网络通信',
         collapsable: false,
         children: [
-          ['/parts/network/', '收集箱'],
+          ['/parts/network/', '收集箱']
           ['/parts/network/protocol', '网络协议'],
           ['/parts/network/security', '网络安全']
         ]
@@ -86,9 +86,7 @@ module.exports = {
       {
         title: '前端工程化',
         collapsable: false,
-        children: [
-          ['/parts/engineering/', '收集箱']
-        ]
+        children: ['/parts/engineering/']
       },
       {
         title: '数据结构与算法',
@@ -98,17 +96,17 @@ module.exports = {
           '/parts/algorithms/learningJavascriptAlgorithmsBook'
         ]
       },
-      // {
-      //   title: 'Vue',
-      //   collapsable: false,
-      //   children: [
-      //     ['/parts/vue/', '收集箱'],
-      //     ['/parts/vue/base', '基础'],
-      //     ['/parts/vue/component', '组件'],
-      //     ['/parts/vue/principle', '原理'],
-      //     ['/parts/vue/source', '源码']
-      //   ]
-      // }
+      {
+        title: 'Vue',
+        collapsable: false,
+        children: [
+          ['/parts/vue/', '收集箱'],
+          ['/parts/vue/base', '基础'],
+          ['/parts/vue/component', '组件'],
+          ['/parts/vue/principle', '原理'],
+          ['/parts/vue/source', '源码']
+        ]
+      }
     ]
   }
 }

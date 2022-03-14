@@ -16,12 +16,9 @@
     "docs:build": "vuepress build docs",
     "deploy": "bash deploy.sh"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/maqingbo/fe-mindmap.git"
-  },
+  "repository": "git+https://github.com/maqingbo/fe-mindmap.git",
   "keywords": [],
-  "author": "",
+  "author": "maqingbo <wmaqingbo@163.com>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/maqingbo/fe-mindmap/issues"

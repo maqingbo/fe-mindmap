@@ -86,6 +86,13 @@ HTML 解析由两个阶段组成：
 - 标记化 (tokenization)：依据规范，识别 HTML 标签所对应的 DOM 对象以及该标签上的属性；
 - 树构建 (tree construction)：以 Document 为根节点，将识别到的 DOM 对象构建成树形结构。
 
+解析过程中如果遇见 script 脚本会直接开始执行脚本，阻塞文档解析，有以下两种应对方式：
+
+- script 标签添加`defer`属性，脚本会等到解析完成后执行。
+- script 标签添加`async`属性，脚本会被加入任务队列。
+
+解析完成后，文档将被标识为`deferred`状态，并且触发`DOMContentLoaded`事件，意思就是可以解析带有`defer`属性的 script 脚本了。脚本解析完成后会触发`Load`事件。
+
 ### 生成 Render Tree
 
 为构建渲染树，浏览器大体上完成了下列工作：
@@ -106,21 +113,67 @@ _Render Tree 及其对应的 DOM Tree_
 
 ### Layout
 
-Render Tree 构造出来之后，节点上并没有元素的位置和大小等信息，计算这些值的过程称为布局 (Layout) 或重排 (reflow)。
+Render Tree 构造出来之后，节点上并没有元素的位置和大小等信息，计算这些值的过程称为布局 (Layout) 或回流 (reflow)。
 
-HTML 采用流式布局，只要一次遍历就能计算出这些信息，基本过程是以浏览器可见区域的左上角`(0, 0)`为基础坐标，从左到右、从上到下的顺序对文档进行遍历（表格元素除外）。布局阶段输出的结果就是盒模型，精确地表示了每一个元素的位置和大小，并且所有的相对单位此时也转化为了绝对单位。
+HTML 采用流式布局，只要一次遍历就能计算出这些信息，基本过程是以浏览器可见区域的左上角`(0, 0)`为基础坐标，从左到右、从上到下的顺序对文档进行遍历（table 除外，所以你要避免使用 table 布局）。布局阶段输出的结果就是盒模型，精确地表示了每一个元素的位置和大小，并且所有的相对单位此时也转化为了绝对单位。
 
-## 重绘（repaint）和回流/重排（reflow）
+## 重绘（repaint）和回流（重排，reflow）
 
 通过上的面分析我们得知，回流其实就是 Reflow 阶段，重绘其实就是渲染过程的 Painting 阶段。
 
 回流阶段时，浏览器会重新遍历整个 Render Tree 以计算节点的位置和大小，然后再次执行 Painting，性能消耗比 repaint 要大得多。
 
-reflow 与 repaint 的时机：
+**会导致回流的操作**
 
-- display:none 会触发 reflow，而 visibility:hidden 只会触发 repaint，因为没有发生位置变化。
-- 有些情况下，比如修改了元素的样式，浏览器并不会立刻 reflow 或 repaint 一次，而是会把这样的操作积攒一批，然后做一次 reflow，这又叫异步 reflow 或增量异步 reflow。
-- 有些情况下，比如 resize 窗口，改变了页面默认的字体等。对于这些操作，浏览器会马上进行 reflow。
+- 页面首次渲染
+- 浏览器窗口大小发生改变
+- 元素尺寸或位置发生改变
+- 元素内容变化（文字数量或图片大小等等）
+- 元素字体大小变化
+- 添加或者删除可见的 DOM 元素
+- 激活 CSS 伪类（例如：`:hover`）
+- 查询某些属性或调用某些方法
+
+一些常用且会导致回流的属性和方法：
+
+- clientWidth、clientHeight、clientTop、clientLeft
+- offsetWidth、offsetHeight、offsetTop、offsetLeft
+- scrollWidth、scrollHeight、scrollTop、scrollLeft
+- scrollIntoView()、scrollIntoViewIfNeeded()
+- getComputedStyle()
+- getBoundingClientRect()
+- scrollTo()
+
+**会导致重绘的操作**
+
+当页面中元素样式的改变但并不影响它在文档流中的位置时（例如：color、background-color、visibility 等），浏览器会将新样式赋予给元素并重新绘制它。
+
+**浏览器内部的优化**
+
+现代浏览器会维护一个队列，把所有引起回流和重绘的操作放入队列中，如果队列中的任务数量或者时间间隔达到一个阈值的，浏览器就会将队列清空，进行一次批处理，这样可以把多次回流和重绘变成一次。
+
+但是当你访问以下涉及布局的属性或方法时，浏览器会立刻清空队列：
+
+- width、height
+- clientWidth、clientHeight、clientTop、clientLeft
+- offsetWidth、offsetHeight、offsetTop、offsetLeft
+- scrollWidth、scrollHeight、scrollTop、scrollLeft
+- getComputedStyle()
+- getBoundingClientRect()
+
+因为队列中可能会有影响到这些属性或方法返回值的操作，即使你希望获取的信息与队列中操作引发的改变无关，浏览器也会强行清空队列，确保你拿到的值是最精确的。
+
+更多可参考：[What forces layout？](https://gist.github.com/paulirish/5d52fb081b3570c81e3a)
+
+**如何减少不必要的回流**
+
+- 合并对样式的多次修改，使用 cssText 或修改 class 属性；
+- 需要对 DOM 进行频繁修改时，可使其脱离文档流，修改完再插入文档流；
+  - 可使用`display: none`隐藏元素
+  - 使用 document fragment 在当前 DOM 之外构建一个子树，再把它拷贝回文档。(document.createDocumentFragment())
+  - 将元素拷贝到一个脱离文档的节点中，修改节点后，再替换原始的元素。（基于 cloneNode）
+- 避免频繁调用涉及布局的 API；
+- CSS3 硬件加速（GPU 加速）；
 
 ## 关键渲染路径与阻塞渲染
 
@@ -129,7 +182,7 @@ Todo
 ## 性能优化
 
 - 结合渲染流程，可以针对性的优化渲染性能：
-- 优化JS的执行效率
+- 优化 JS 的执行效率
 - 降低样式计算的范围和复杂度
 - 避免大规模、复杂的布局
 - 简化绘制的复杂度、减少绘制区域
@@ -144,3 +197,5 @@ Todo
 - [渲染页面：浏览器的工作原理 - MDN](https://developer.mozilla.org/zh-CN/docs/Web/Performance/How_browsers_work)
 - [渲染树构建、布局及绘制 - Google](https://developers.google.com/web/fundamentals/performance/critical-rendering-path/render-tree-construction)
 - [浏览器渲染基本原理解析](https://mp.weixin.qq.com/s?__biz=MzUyNDYxNDAyMg==&mid=2247484405&idx=1&sn=64fca96a6fc7fc2bf11e2da6079de678&chksm=fa2be31ccd5c6a0aad0b37aa57a16d416280a2e6c2f6458b3da756fe168f7ed5a4e7981ca919&mpshare=1&scene=1&srcid=#rd)
+- [浏览器的回流与重绘 - 掘金](https://juejin.cn/post/6844903569087266823)
+- [避免大型、复杂的布局和布局抖动 - Google](https://developers.google.com/web/fundamentals/performance/rendering/avoid-large-complex-layouts-and-layout-thrashing?utm_source=devtools#avoid-forced-synchronous-layouts)

@@ -1,8 +1,3 @@
----
-title: 'JS 执行过程'
-sidebarDepth: 2
----
-
 简单地讲，可以分为两个阶段：编译阶段、执行阶段。
 
 ![](../../images/js/JS-life.png)
@@ -56,11 +51,11 @@ sidebarDepth: 2
 
 ### 作用域
 
-作用域是一套规则，用来管理引擎如何查找变量。JS 采用是词法作用域 (lexical scoping)，也就是静态作用域，函数的作用域在函数定义的时候就决定了。
+作用域是一套规则，用来管理引擎如何查找变量。JS 采用是词法作用域 (lexical scoping)，也就是静态作用域，函数的作用域在**函数定义的时候**就决定了。
 
 > 与之对应的还有一个动态作用域，函数的作用域是在函数调用的时候才决定的
 
-参考：[How javascript works](https://github.com/Troland/how-javascript-works) 
+<!-- 参考：[How javascript works](https://github.com/Troland/how-javascript-works)  -->
 
 ## 执行阶段
 
@@ -68,9 +63,9 @@ sidebarDepth: 2
 
 JavaScript 中的运行环境有三种。
 
-- 全局环境：JavaScript 代码运行起来会首先进入该环境；
-- 函数环境：当函数被调用执行时，会进入当前函数中执行代码；
-- eval（不建议使用，可忽略）。
+- 全局环境：JavaScript 代码运行起来会首先进入该环境
+- 函数环境：当函数被调用执行时，会进入当前函数中执行代码
+- eval
 
 JS 引擎会以函数调用栈 (call stack) 的方式处理代码，遇到以上三种情况，都会分别生成不同类型的执行上下文，并推入调用栈中。所以 JavaScript 中有三种执行上下文类型：
 
@@ -198,10 +193,11 @@ FunctionExecutionContext = {
 
 如果你了解 ES5 版本的有关执行上下文的内容，会感到奇怪为啥有关 VO、AO、作用域、作用域链等内容没有在本文中提及。其实两者概念并不冲突，一个是 ES3 规范中的定义，而词法环境则是 ES6 规范的定义。不同时期，不同称呼。
 
-- ES3     -->   ES6
-- 作用域   -->  词法环境
-- 作用域链 --> outer 引用
-- VO/AO   -->  环境记录
+|   ES3    |    ES6     |
+| :------: | :--------: |
+|  作用域  |  词法环境  |
+| 作用域链 | outer 引用 |
+|  VO/AO   |  环境记录  |
 
 参考：[stackoverflow](https://stackoverflow.com/questions/12599965/lexical-environment-and-function-scope)
 
