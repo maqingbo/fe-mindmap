@@ -57,7 +57,11 @@ module.exports = {
       {
         title: 'Web APIs',
         collapsable: false,
-        children: ['/parts/webApis/', '/parts/webApis/DOM']
+        children: [
+          ['/parts/webApis/', '收集箱'],
+          ['/parts/webApis/DOM', 'DOM'],
+          ['/parts/webApis/event', '事件']
+        ]
       },
       {
         title: '浏览器',
