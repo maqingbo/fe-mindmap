@@ -34,6 +34,7 @@ DOM 曾经使用 Level 来命名，一直到 Level 3，标准文件维护在 [w3
     - Element
       - SVGElement
       - HTMLElement
+        - HTMLCanvasElement（注意这个和 SVG 的区别）
         - HTMLInputElement
         - HTMLBodyElement
         - ...（太多了，不一一列举）

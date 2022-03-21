@@ -28,15 +28,16 @@ module.exports = {
         title: 'CSS',
         collapsable: false,
         children: [
-          '/parts/css/',
-          '/parts/css/overView',
-          '/parts/css/keyConcepts',
-          '/parts/css/atRules',
-          '/parts/css/inlineFormatting',
-          '/parts/css/stackingContext',
-          '/parts/css/preprocessor',
-          '/parts/css/sass-mixin',
-          '/parts/css/bestPractice',
+          ['/parts/css/', '收集箱'],
+          ['/parts/css/overView', '概览'],
+          ['/parts/css/keyConcepts', '关键概念'],
+          ['/parts/css/atRules', 'atRules'],
+          ['/parts/css/inlineFormatting', '视觉排版模型细节'],
+          ['/parts/css/stackingContext', '层叠上下文'],
+          ['/parts/css/processor', 'CSS 处理器'],
+          ['/parts/css/mixin', '常用 mixin'],
+          ['/parts/css/h5', '移动端'],
+          ['/parts/css/bestPractice', '最佳实践'],
           ['/parts/css/interview', '面试题']
         ]
       },
@@ -44,14 +45,15 @@ module.exports = {
         title: 'JavaScript',
         collapsable: false,
         children: [
-          '/parts/javascript/inBox',
-          '/parts/javascript/overView',
+          ['/parts/javascript/inBox', '收集箱'],
+          ['/parts/javascript/overView', '概念'],
           ['/parts/javascript/execution', 'JS 执行过程'],
           ['/parts/javascript/closure', '闭包'],
           ['/parts/javascript/function', '函数'],
           ['/parts/javascript/prototype', '原型与继承'],
           ['/parts/javascript/async', '异步编程'],
-          '/parts/javascript/handWritten'
+          ['/parts/javascript/promise', 'Promise'],
+          ['/parts/javascript/handWritten', '手写系列']
         ]
       },
       {
@@ -85,10 +87,29 @@ module.exports = {
         ]
       },
       {
+        title: 'Vue',
+        collapsable: false,
+        children: [
+          ['/parts/vue/', '收集箱'],
+          ['/parts/vue/base', '基础'],
+          ['/parts/vue/component', '组件'],
+          ['/parts/vue/principle', '原理'],
+          ['/parts/vue/source', '源码'],
+          ['/parts/vue/berwin', '深入浅出 Vue.js']
+        ]
+      },
+      {
         title: '前端工程化',
         collapsable: false,
         children: [
-          ['/parts/engineering/', '收集箱']
+          ['/parts/engineering/', '收集箱'],
+          ['/parts/engineering/script', '脚本'],
+          ['/parts/engineering/standard', '规范'],
+          ['/parts/engineering/test', '测试、监控'],
+          ['/parts/engineering/design', '工程设计'],
+          ['/parts/engineering/build', '构建'],
+          ['/parts/engineering/devops', '持续集成'],
+          ['/parts/engineering/git', 'Git']
         ]
       },
       {
@@ -98,18 +119,7 @@ module.exports = {
           '/parts/algorithms/',
           '/parts/algorithms/learningJavascriptAlgorithmsBook'
         ]
-      },
-      // {
-      //   title: 'Vue',
-      //   collapsable: false,
-      //   children: [
-      //     ['/parts/vue/', '收集箱'],
-      //     ['/parts/vue/base', '基础'],
-      //     ['/parts/vue/component', '组件'],
-      //     ['/parts/vue/principle', '原理'],
-      //     ['/parts/vue/source', '源码']
-      //   ]
-      // }
+      }
     ]
   }
 }

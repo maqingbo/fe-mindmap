@@ -172,7 +172,7 @@ TODO
 
 ## 视觉排版模型
 
-:::warning
+:::tip
 关于`format`，虽然`格式化`这个词可能早已深入人心了，但是我自己更倾向于译作`排版`！
 :::
 
@@ -220,9 +220,9 @@ TODO
 - 行内排版上下文的生成：
   - display: inline
 - 行内排版上下文的排列规则：
-  - 盒子从包含块的顶部开始一个挨一个水平或垂直排列（取决于 writing-mode 属性，默认水平排列），这些盒之间的水平方向上的 margin，border和 padding 都有效；
+  - 盒子从包含块的顶部开始一个挨一个水平或垂直排列（取决于 writing-mode 属性，默认水平排列），这些盒之间的水平方向上的 margin，padding 与 writing-mode 的值保持一致；
   - 盒子垂直方向的对齐方式由 vertical-align 属性决定；
-  - 包含这一行所有盒子的矩形区域被称作行框(line box)。
+  - 包含这一行所有盒子的矩形区域被称作行框 (line box)。
   - 这一块信息还挺复杂的，更多信息请参考 [视觉排版模型细节](./inlineFormatting.md)。
 
 相对定位：当一个盒根据常规流或者浮动摆放好后，它可能会相对于该位置移动，称之为相对定位。相对定位的参照物是这个盒子在常规流中的位置。
@@ -247,10 +247,22 @@ TODO
 
 ## 媒体查询
 
+TODO
+
 ## 动画
 
 TODO
 ## 弹性布局
+
+flex 是对 display 属性的拓展。
+
+`display: flex` 会生成一个类似于 BFC 的区域 —— FFC(flex formatting context)，只是里面子盒子的排列规则不同于 BFC，而是使用弹性布局方式。overflow 属性同样适用于 FFC。
+
+区别：
+
+- float、clear 不生效；
+- vertical-align 不生效；
+- ::first-line、::first-letter 伪元素不适用；
 
 TODO
 

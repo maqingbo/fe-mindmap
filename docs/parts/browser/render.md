@@ -71,9 +71,9 @@ _Rendering engine basic flow_
 
 - **解析 HTML 生成 DOM tree**：渲染引擎首先解析 HTML 文档，将各个标签转化成 DOM 节点，生成 DOM Tree。
 - **生成 CSSOM Tree**：不管是内联式，外联式还是嵌入式引入的 CSS 样式会被解析生成 CSSOM Tree。
-- **构建 Render Tree**：根据 DOM Tree 与 CSSOM Tree 生成渲染树 (Render Tree)。
-- **布局 (Layout)**：为 Render Tree 上的每一个节点计算大小和对应在视口上的位置。这一步也称作**重排/回流 (reflow)**。这一阶段，所有相对单位被转化为绝对单位。
-- **绘制 (Painting)**：将 Render Tree 上的每一个节点转化成屏幕上的实际像素，然后将每一个节点绘制出来。
+- **构建 Render Tree**：根据 DOM Tree 与 CSSOM Tree 生成渲染树 (Render Tree)。此时树上的每个节点已包含基本样式，不包括大小和位置信息。
+- **布局 (Layout/Flow)**：为 Render Tree 上的每一个节点计算大小和对应在视口上的位置。再次执行这一步时称作**重排/回流 (reflow)**。这一阶段，所有相对单位被转化为绝对单位。
+- **绘制 (Paint)**：将 Render Tree 上的每一个节点转化成屏幕上的实际像素，然后将每一个节点绘制出来。再次执行这一步骤叫做**重绘 (repaint)**。
 
 以上步骤是一个渐进的过程，为了提高用户体验，渲染引擎试图尽可能快的把结果显示给最终用户。它不会等到所有 HTML 都被解析完才创建并布局渲染树。它会在从网络层获取文档内容的同时把已经接收到的局部内容先展示出来。
 
@@ -86,12 +86,23 @@ HTML 解析由两个阶段组成：
 - 标记化 (tokenization)：依据规范，识别 HTML 标签所对应的 DOM 对象以及该标签上的属性；
 - 树构建 (tree construction)：以 Document 为根节点，将识别到的 DOM 对象构建成树形结构。
 
-解析过程中如果遇见 script 脚本会直接开始执行脚本，阻塞文档解析，有以下两种应对方式：
+解析过程中如果遇见 script 脚本会直接开始执行脚本，阻塞文档解析，有以下应对方式：
 
+- script 标签添加到文档最后面。
 - script 标签添加`defer`属性，脚本会等到解析完成后执行。
 - script 标签添加`async`属性，脚本会被加入任务队列。
 
 解析完成后，文档将被标识为`deferred`状态，并且触发`DOMContentLoaded`事件，意思就是可以解析带有`defer`属性的 script 脚本了。脚本解析完成后会触发`Load`事件。
+
+### 生成 CSSOM Tree
+
+[W3c 的 CSS 2.1 规范](https://www.w3.org/TR/CSS2/intro.html#q2.0) 中给出了 CSSOM Tree 构建的大概流程（仅供参考，与实现不完全相同）：
+
+1. 识别设备的媒体类型；
+2. 筛选所有样式表中适配该媒体类型的样式表；
+3. 根据选择器为 DOM Tree 做标注，然后为属性赋值；
+   - 值的计算：不同媒体类型有不同算法。例如媒体类型是 screen 的话，使用的就是 [视觉格式化模型 (visual formatting model)](../css/keyConcepts.html#%E8%A7%86%E8%A7%89%E6%8E%92%E7%89%88%E6%A8%A1%E5%9E%8B)
+4. 根据有标注的 DOM Tree，生成 CSSOM Tree，两棵树并不完全一致；
 
 ### 生成 Render Tree
 
@@ -113,17 +124,19 @@ _Render Tree 及其对应的 DOM Tree_
 
 ### Layout
 
-Render Tree 构造出来之后，节点上并没有元素的位置和大小等信息，计算这些值的过程称为布局 (Layout) 或回流 (reflow)。
+Render Tree 构造出来之后，节点上并没有元素的位置和大小等信息，计算这些值的过程称为布局 (Layout/Flow)。
 
 HTML 采用流式布局，只要一次遍历就能计算出这些信息，基本过程是以浏览器可见区域的左上角`(0, 0)`为基础坐标，从左到右、从上到下的顺序对文档进行遍历（table 除外，所以你要避免使用 table 布局）。布局阶段输出的结果就是盒模型，精确地表示了每一个元素的位置和大小，并且所有的相对单位此时也转化为了绝对单位。
 
 ## 重绘（repaint）和回流（重排，reflow）
 
-通过上的面分析我们得知，回流其实就是 Reflow 阶段，重绘其实就是渲染过程的 Painting 阶段。
+通过上的面分析我们得知，回流其实就是重新执行 Layout/Flow 这一步，重绘其实就是重新执行 Paint 这一步。
 
-回流阶段时，浏览器会重新遍历整个 Render Tree 以计算节点的位置和大小，然后再次执行 Painting，性能消耗比 repaint 要大得多。
+回流阶段时，浏览器会重新遍历整个 Render Tree 以计算节点的位置和大小，然后再次执行 Paint，性能消耗比 repaint 要大得多。
 
 **会导致回流的操作**
+
+涉及到改变元素大小或位置的操作，基本上都会引发回流。
 
 - 页面首次渲染
 - 浏览器窗口大小发生改变
