@@ -53,3 +53,27 @@ DOM 方面的继承问题：
 
 - Canvas 基于像素，提供 2D 绘制函数，是一种 HTML 元素类型，依赖于 HTML，只能通过脚本绘制图形；
 - SVG 为矢量，自己提供一系列图形元素（标签），还有完整的动画，事件机制，就能独立使用，也可以嵌入到 HTML 中。
+
+
+## 统计页面标签种类及数量
+
+Q：统计页面一共使用了多少种标签以及各标签的数量。
+
+A：
+
+```js
+const allTags = Array.from(document.querySelectorAll('*')).map(tag => tag.tagName)
+const types = new Set(allTags).size
+
+const obj = {}
+for( let tag of allTags) {
+  if (!obj[tag]) {
+    obj[tag] = 1
+  } else {
+    obj[tag]++
+  }
+}
+
+console.log(types)
+console.log(obj)
+```

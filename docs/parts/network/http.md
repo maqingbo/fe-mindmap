@@ -13,12 +13,12 @@
 
 - Method：请求方式（大写）
   - GET: 通常用来获取资源
-  - HEAD: 获取资源的元信息
   - POST: 提交数据，即上传数据
   - PUT: 修改数据
   - DELETE: 删除资源（几乎用不到）
+  - HEAD: 与 GET 一样，但只返回首部，不返回主体
+  - OPTIONS: 列出可使用的请求方法，用来跨域请求
   - CONNECT: 建立连接隧道，用于代理服务器
-  - OPTIONS: 列出可对资源实行的请求方法，用来跨域请求
   - TRACE: 追踪请求-响应的传输路径
 - path-to-resource：所请求的资源在 web 服务器上的`路径`。
 - HTTP/version-number：HTTP 协议版本号。
@@ -106,7 +106,7 @@ Content-Type: text/html; charset=UTF-8
 **数据存放位置**
 
 - GET：将数据拼接在 URL 之后。
-- POST：数据放在 Request Body 中。
+- POST：数据放在 Request Body 中（也可以放在 url，不推荐）
 
 **数据大小限制**
 
@@ -123,23 +123,35 @@ Content-Type: text/html; charset=UTF-8
 - GET：缓存服务器返回的响应。
 - POST：不缓存。
 
+**数据包**
+
+GET 会产生一个 TCP 数据包，而 POST 会产生两个 TCP 数据包。（不是所有浏览器）
+
+详细的说就是：
+
+对于 GET 方式的请求，浏览器会把 http header 和 data 一并发送出去，服务器响应 200（返回数据）;
+而对于 POST，浏览器先发送 header，服务器响应 100 continue，浏览器再发送 data，服务器响应 200 ok（返回数据）。
+
 ## 常见状态码
 
-- 1xx：服务器已接收了客户端请求，客户端可继续发送请求；
+- 100-199：服务器已接收了客户端请求，客户端可继续发送请求；
   - 101 Switching Protocols。在 HTTP 升级为 WebSocket 的时候，如果服务器同意变更，就会发送状态码 101。
-- 2xx：服务器已成功接收到请求，并进行处理；
+- 200-299：服务器已成功接收到请求，并进行处理；
   - 200 OK 是见得最多的成功状态码。通常在响应体中放有数据。
   - 204 No Content 含义与 200 相同，但响应头后没有 body 数据。
-  - 206 Partial Content 顾名思义，表示部分内容。使用场景为 HTTP 分块下载和断点续传，当然也会带上相应的响应头字段 Content-Range。
-- 3xx：服务器要求客户端重定向；
+  - 206 Partial Content 顾名思义，表示部分内容。使用场景为 HTTP 分块下载和断点续传，必须包含 Content-Range、 Date 以及 ETag 或 ContentLocation 首部。
+- 300-399：服务器要求客户端重定向；
   - 301 Moved Permanently 即永久重定向
   - 302 Found，即临时重定向
-- 4xx：客户端的请求有非法内容；
+  - 304 Not Modified：GET 请求，最近资源未被修改，不返回请求体；协商缓存（使用本地缓存，不再重新返回资源）
+  - 305 Use Proxy：必须使用代理请求资源，代理地址在首部字段 Location 给出。
+- 400-499：客户端的请求有非法内容；
+  - 400 Bad Request：错误请求
   - 401 Unauthorized：未认证
   - 403 Forbidden: 服务器禁止访问
   - 404 Not Found: 资源未找到，服务器上没有对应的资源。
   - 405 Method Not Allowed: 请求方法不被服务器端允许。
-- 5xx：服务器出错；
+- 500-599：服务器出错；
   - 500 Internal Server Error: 仅仅告诉你服务器出错了，出了啥错咱也不知道。
   - 502 Bad Gateway: 服务器自身是正常的，但访问的时候出错了，啥错误咱也不知道。
   - 503 Service Unavailable: 服务器停机或超载，无法响应。
@@ -176,7 +188,8 @@ HTTP 协议是无状态的（stateless）。也就是说，同一个客户端第
 ### 通用
 
 - Cache-Control：缓存相关
-- Data：表明创建 HTTP 报文的日期和时间
+- Connection：Keep-Alive（TCP 连接重复使用）
+- Date：创建报文的日期和时间
 - Transfer-Encoding：规定了传输报文主体时采用的编码方式。
 
 ### 请求首部字段
@@ -197,29 +210,89 @@ HTTP 协议是无状态的（stateless）。也就是说，同一个客户端第
 ### 响应首部字段
 
 - Accept-Ranges：是否允许客户端只获取资源的一部分
+- Set-Cookie：cookie 信息
 
 ### 实体首部字段
 
 - Allow：服务端支持的请求方法
-- Content-Encoding：body 部分的编码方式
-- Content-Language：body 使用的自然语言
-- Content-Length：body 部分大小（字节）
-- Content-Type：body 媒体类型，值与 Accept 一样
-- Expires：缓存失效日期
-- Last-Modified：资源最终修改时间
+- 内容
+  - Content-Type：body 媒体类型，值与 Accept 一样
+  - Content-Encoding：body 部分的编码方式
+  - Content-Language：body 使用的自然语言
+  - Content-Length：body 部分大小（字节）
+  - Content-Location 资源实际所处的位置
+- 缓存
+  - ETag：实体标记
+  - Expires：已被 Cache-Control 代替
+  - Last-Modified：资源最终修改时间
 
-## 非 HTTP/1.1 首部字段
+### Cookie
 
-- Set-Cookie
-  - 响应报文首部
-  - expires=DATE：有效期
-  - path=PATH：文件目录
-  - domain=域名：域名。
-  - HttpOnly：cookie 是否能被 JS 访问
-  - Domain 和 Path 标识定义了 Cookie 的作用域
-- Cookie
-  - 请求报文首部
-  - 形式：key=value
+管理服务器与客户端之间状态的 Cookie，虽然没有被编入标准化
+HTTP/1.1 的 RFC2616 中，但在 Web 网站方面得到了广泛的应用。
+
+服务端使用 Set-Cookie 响应，客户端使用 Cookie 接收。
+
+```
+Set-Cookie: name=value
+
+Cookie: name=value
+```
+
+**分类**
+
+- 会话 cookie
+  - 会话关闭之后它会被自动删除
+  - 设置 Discard 参数或不设置 Expires、Max-Age
+  - 有的浏览器有恢复会话功能，可能导致无期限 cookie
+- 持久性 Cookie
+  - 指定时间后失效
+  - Expires：过期时间点（到什么时候过期，GMT 格式）
+  - Max-Age：过期时间段（多长时间后过期，整数，单位秒）
+  - Max-Age=0 时 cookie 立即失效
+
+**限制访问**
+
+- HttpOnly 属性：JavaScript 无法访问 cookie
+- Secure 属性：只有 https 时才可以发送 cookie
+
+**作用域**
+
+- Domain 属性：只向指定域名发送 cookie，设置父域名自动匹配子域名
+- Path 属性：只向服务器上指定路径发送 cookie，'/'匹配所有路径
+- Port：只向与列表中的端口相匹配的服务器提供 cookie，逗号分隔
+- SameSite：跨站请求相关
+  - None：浏览器会在同站请求、跨站请求下继续发送 cookies，不区分大小写
+  - Strict：浏览器只在访问相同站点时发送 cookie
+  - Lax：与 Strict 类似，但用户从外部站点导航至 URL 时（例如通过链接）除外
+
+```
+Set-Cookie2: foo="bar"; Version="1";Port="80,81,8080"
+```
+
+## http 缓存
+
+为什么有缓存：同样的文件没必要每次发请求，加快请求速度。
+
+哪些资源可以被缓存：静态资源
+
+- 强制缓存
+  - 首次请求后请求头携带 Cache-Control：max-age=1000 字段
+  - 再次请求时，浏览器判断 Cache-Control 字段是否在范围
+  - 不在范围的话才发请求
+- 协商缓存
+  - 服务端缓存策略
+  - 服务器判断请求的内容是否和服务端一致（判断 Last-Modified、ETag）
+  - 一致的话直接返回 304，浏览器读取缓存数据，否则读取资源返回
+
+三种刷新操作：
+
+- 正常操作：url 跳转、连接跳转、前进后退
+  - 两种缓存有效
+- 手动刷新：F5、刷新按钮
+  - 强制缓存失效，协商缓存有效
+- 强制刷新：Ctrl + F5
+  - 两种缓存失效
 
 ## HTTPS
 
@@ -233,6 +306,15 @@ https
 
 首次非对称加密，之后全是对称加密。
 
+## Restful API
+
+传统 API 设计：把每个 url 当做一个功能；
+Restful API：把每个 url 当做一个唯一的资源。
+
+- method 表示操作类型
+
 ## 参考
 
+- [HTTP cookies - MDN](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Cookies)
+- [《HTTP 权威指南》](https://book.douban.com/subject/10746113/)
 - [HTTP 灵魂之问，巩固你的 HTTP 知识体系](https://juejin.cn/post/6844904100035821575)

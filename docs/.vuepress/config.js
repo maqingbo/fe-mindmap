@@ -53,6 +53,7 @@ module.exports = {
           ['/parts/javascript/prototype', '原型与继承'],
           ['/parts/javascript/async', '异步编程'],
           ['/parts/javascript/promise', 'Promise'],
+          ['/parts/javascript/module', '模块化'],
           ['/parts/javascript/handWritten', '手写系列']
         ]
       },
@@ -62,7 +63,10 @@ module.exports = {
         children: [
           ['/parts/webApis/', '收集箱'],
           ['/parts/webApis/DOM', 'DOM'],
-          ['/parts/webApis/event', '事件']
+          ['/parts/webApis/event', '事件'],
+          ['/parts/webApis/BOM', 'BOM'],
+          ['/parts/webApis/ajax', 'Ajax'],
+          ['/parts/webApis/storage', '本地存储']
         ]
       },
       {
@@ -71,9 +75,9 @@ module.exports = {
         children: [
           ['/parts/browser/', '收集箱'],
           ['/parts/browser/render', '内部原理'],
-          ['/parts/browser/storage', '本地存储'],
           ['/parts/browser/cache', '缓存'],
           ['/parts/browser/client', '客户端能力'],
+          ['/parts/browser/performance', '性能优化'],
           ['/parts/browser/interview', '面试题']
         ]
       },
@@ -83,7 +87,8 @@ module.exports = {
         children: [
           ['/parts/network/', '收集箱'],
           ['/parts/network/protocol', '网络协议'],
-          ['/parts/network/security', '网络安全']
+          ['/parts/network/http', 'HTTP'],
+          ['/parts/network/security', '网络安全'],
         ]
       },
       {
@@ -94,8 +99,10 @@ module.exports = {
           ['/parts/vue/base', '基础'],
           ['/parts/vue/component', '组件'],
           ['/parts/vue/principle', '原理'],
+          ['/parts/vue/ecosystem', '生态'],
           ['/parts/vue/source', '源码'],
-          ['/parts/vue/berwin', '深入浅出 Vue.js']
+          ['/parts/vue/berwin', '深入浅出 Vue.js'],
+          ['/parts/vue/interview', '面试题']
         ]
       },
       {
@@ -116,8 +123,11 @@ module.exports = {
         title: '数据结构与算法',
         collapsable: false,
         children: [
-          '/parts/algorithms/',
-          '/parts/algorithms/learningJavascriptAlgorithmsBook'
+          ['/parts/algorithms/dataStructure', '数据结构'],
+          ['/parts/algorithms/algorithm', '算法'],
+          ['/parts/algorithms/sort', '排序'],
+          ['/parts/algorithms/topic', '题目'],
+          ['/parts/algorithms/bookNote', '学习JavaScript数据结构与算法']
         ]
       }
     ]

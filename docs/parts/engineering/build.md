@@ -1,10 +1,62 @@
+---
+sidebarDepth: 1
+---
+
 ## Babel
 
-Todo
+Babel 是一个 JavaScript 编译器，可以将编写的代码处理成向后兼容的 JavaScript 语法。
+
+### 处理流程
+
+- Tokenizer：词法分析，将代码分割成 Token 数组；
+- Parser：语法分析，将 Token 数组转换成 AST；
+- Traverser：遍历 AST，加载转换器；
+- Transform：使用转换器，增删改查 AST 节点；
+- Generator：将 AST 转换回代码。
 
 ## Gulp
 
-Todo
+是一个基于流的自动化构建工具，不包括模块化的功能，通过配置一系列的 task，例如文件压缩合并、雪碧图、启动 server、版本控制等，然后定义执行顺序来执行 task，从而构建前端项目的流程。
+
+gulp 强调的是规范前端开发的流程，功能类似于 webpack 的插件功能。
+
+### 核心
+
+- task: 创建一个任务
+- series：顺序执行多个任务
+- parallel：并行执行多个任务
+- src：读取数据源转换成 stream
+- pipe：管道-可以在中间对数据流进行处理
+- dest：输出数据流到目标路径
+- on：事件监听
+- watch：数据源监听
+
+### 原理
+
+核心就是把文件转换成 Node 中的 Stream 流，然后对 Stream 进行操作。
+
+gulp 采用 pipe（管道）的概念，意味着顺着管道流淌，插件就相当于在管道中间有个过滤站，对流进行过滤处理。
+
+### 最佳实践
+
+```bash
+.
+├── gulpfile.js
+├── package.json
+└── workflow
+    ├── common.js
+    ├── lib.js
+    └── task
+        ├── clean.js
+        ├── compass.js
+        ├── include.js
+        ├── initProject.js
+        ├── merge.js
+        ├── readToolMethod.js
+        ├── start.js
+        ├── version.js
+        └── watch.js
+```
 
 ## Webpack
 
@@ -43,7 +95,11 @@ Todo
 
 Webpack 内部只能够处理 JS 模块代码，Loader 负责类型转换，将其他类型的模块转化为 JS 代码模块。
 
-针对每个文件类型，loader 是支持以数组的形式配置多个的，因此当 Webpack 在转换该文件类型的时候，会按顺序链式调用每一个 loader，前一个 loader 返回的内容会作为下一个 loader 的入参。因此 loader 的开发需要遵循一些规范，比如返回值必须是标准的 JS 代码字符串，以保证下一个 loader 能够正常工作，同时在开发上需要严格遵循“单一职责”，只关心 loader 的输入以及对应的输出。
+针对每个文件类型，loader 是支持以数组的形式配置多个的，因此当 Webpack 在转换该文件类型的时候，会按顺序链式调用每一个 loader，前一个 loader 返回的内容会作为下一个 loader 的入参。因此 loader 的开发需要遵循一些规范，比如返回值必须是标准的 JS 代码字符串，以保证下一个 loader 能够正常工作。
+
+- 单一原则：每个 Loader 只做一件事；
+- 链式调用：Webpack 会按顺序链式调用每个 Loader；
+- 统一原则：遵循 Webpack 制定的设计规则和结构，输入与输出均为字符串，各个 Loader 完全独立，即插即用；
 
 :::tip
 同一类型模块使用多个 loader 处理时，从后往前调用。
@@ -121,3 +177,4 @@ sourceMap 其实并不是 Webpack 特有的功能，而是 Webpack 支持 source
 
 - [当面试官问 Webpack 的时候他想知道什么](https://juejin.cn/post/6943468761575849992)
 - [构建 webpack5.x 知识体系](https://juejin.cn/post/7023242274876162084)
+- [AST 抽象语法树——最基础的 javascript 重点知识，99%的人根本不了解](https://segmentfault.com/a/1190000016231512)

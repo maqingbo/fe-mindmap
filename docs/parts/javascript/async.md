@@ -28,11 +28,19 @@
 - **定时触发线程**：为什么 setTimeout 不阻塞后面程序的运行，那其实 setTimeout 不是由 js 引擎线程完成的，是由定时器触发线程完成的，所以它们可以是同时进行的，那么定时器触发线程在这定时任务完成之后会通知事件触发线程往任务队列里添加事件；
 - **事件触发线程**：将满足触发条件的事件放入任务队列，一些异步的事件会放到异步队列中；
 - **异步 HTTP 请求线程**：用与处理 ajax 请求的，当请求完成时如果有回调函数就通知事件触发线程往任务队列中添加任务；
+
 ## 事件循环（Event Loop）
+
+JS 中有两种任务类型：微任务（microtask）和宏任务（macrotask），在 ES6 中，微任务称为 jobs，宏任务称为 task：
+
+- **宏任务**：script （主代码块）、setTimeout 、setInterval 、setImmediate 、I/O 、UI rendering
+- **微任务**：process.nextTick（Nodejs） 、Promise 、Object.observe 、MutationObserver
 
 ![](../../images/js/event-loop.gif)
 
 - [stackoverflow](https://stackoverflow.com/questions/25915634/difference-between-microtask-and-macrotask-within-an-event-loop-context)
+
+- Node.js 中 Event Loop 和浏览器中 Event Loop 有什么区别？
 
 ## 异步编程方法
 
@@ -139,7 +147,7 @@ class PubSub {
 
 ### Promise、async/await
 
-重点难点，单独开篇。参考 [Promise](./promise.md)。
+重点难点，单独开篇 —— [Promise](./promise.md)。
 
 ## 参考
 

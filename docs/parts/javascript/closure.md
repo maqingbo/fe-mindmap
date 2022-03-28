@@ -24,66 +24,104 @@ ExecutionContext = {
 举例：
 
 ```js
-function makeFunc() {
-  let name = "Mozilla";
-  function displayName() {
-    console.log(name);
+function fn1 () {
+  let a = '111'
+  let b = '222'
+  function fn2 () {
+    console.log(a);
   }
-  return displayName;
+  return fn2;
 }
 
-let myFunc = makeFunc();
-myFunc();
+let result = fn1();
+result();
 ```
 
-上面的代码会形成下面这样的词法环境，我们需要尤其注意绿色的那一行代码：
+当我们的代码执行完`let result = fn1()`这一句的时候，`fn1`函数已经执行完毕，那它所对应的执行上下文就会从函数调用栈中出栈，词法环境也应该从内存中删除。但我们在执行下一行代码`fn2()`时却依然能打印出 **111**！这说明`fn1`的词法环境并没有被完全删除。
 
-```diff
-GlobalExecutionContext = {
-  LexicalEnvironment: {
-    EnvironmentRecord: {
-      type: 'object',
-      myFunc: <uninitialized>
-    },
-    outer: null,
-    this: <globalObject>
-  }
-},
-MakeFuncExecutionContext = {
-  LexicalEnvironment: {
-    EnvironmentRecord: {
-      type: 'declarative',
-      arguments: { length: 0 },
-      displayName: <uninitialized>,
-      name: <uninitialized>
-    },
-    // outer 指向的是当前词法环境被定义时的父环境
-     outer: <Global Lexical Environment>,
-    this: <utils>
-  }
-}
-DisplayNameExecutionContext = {
-  LexicalEnvironment: {
-    EnvironmentRecord: {
-      type: 'declarative',
-      arguments: { length: 0 }
-    },
-+   // outer 指向的是当前词法环境被定义时的父环境
-+   outer: <MakeFunc Lexical Environment>,
-    this: <utils>
-  }
-}
+JavaScript 使用的是静态作用域，在函数调用栈执行函数时，执行上下文、作用域也是被顺序创建和销毁的，但是 JS 中的函数也可以作为参数或返回一个函数，此时子函数的销毁时间晚于父函数的，假如父函数销毁了，子函数依然引用了父函数中的变量，怎么办？
+
+闭包就是为了处理这一情况，父函数销毁前，引擎会把**子函数引用到的变量**（不是全部）打包成 Closure 放到子函数的 `[[Scopes]]` 属性上，保证即使父函数销毁了，子函数也能访问它的外部引用。
+
+```yaml
+# Chrome 控制台打印的 result
+# console.dir(result)
+
+ƒ fn2()
+  arguments: null
+  caller: null
+  length: 0
+  name: "fn2"
+  prototype: {constructor: ƒ}
+  [[FunctionLocation]]: VM1110:4
+  [[Prototype]]: ƒ ()
+  [[Scopes]]: Scopes[3]
+    0: Closure (fn1) {a: '111'} # 闭包在这里
+    1: Script {func2: ƒ, clo: ƒ, result: ƒ}
+    2: Global {window: Window, self: Window, document: document, …}
 ```
 
-当我们的代码执行完`let myFunc = makeFunc()`这一句的时候，`makeFunc`函数已经执行完毕，那它所对应的执行上下文就会从函数调用栈中出栈，词法环境也应该从内存中删除。但我们在执行下一行代码`myFunc()`时却依然能打印出 **Mozilla**！这说明`makeFunc`的词法环境并没有从内存中删除。
+### 一个讨论
 
-**函数`myFunc()`以及`makeFunc`的词法环境组合起来就叫闭包！**
+有如下代码：
 
-至于`makeFunc`的词法环境为什么没有从内存中删除，是因为 JS 采用的是**引用计数**的垃圾回收机制，只要还有地方引用了这个词法环境，那么它就不会被删除。
+```js
+function fn1 () {
+  const a = 1;
+  const b = 2;
+  const c = 3;
+  function fn2() {
+    console.log("xx");
+  }
+  function fn3() {
+    console.log(a);
+    console.log(c);
+  }
+  return fn2;
+}
+const clo = fn1();
+console.dir(clo);
+```
 
-## 使用场景
+在 chrome 控制台执行这段代码时，会有下面的情况：
+
+```yaml
+ƒ fn2()
+  arguments: null
+  caller: null
+  length: 0
+  name: "fn2"
+  prototype: {constructor: ƒ}
+  [[FunctionLocation]]: VM1110:4
+  [[Prototype]]: ƒ ()
+  [[Scopes]]: Scopes[3]
+    0: Closure (fn1) {a: 1, c: 3} # 请看这里
+    1: Script {func2: ƒ, clo: ƒ, result: ƒ}
+    2: Global {window: Window, self: Window, document: document, …}
+```
+
+上面代码中，fn3 对 fn1 的变量进行了引用，我们只 return 了 fn2，为什么 fn2 的 `[[Scopes]]` 中出现了 Closure 字段？
+
+**猜测**：可能是 Chrome 在销毁父函数的词法环境时，检测到被引用的变量时，直接打包并插入到所有子函数的`[[Scopes]]`中，不对子函数进行区分。
+
+## 出现场景
 
 ### 返回一个函数
+
+```js
+function create () {
+  const a = 1
+  return function () {
+    console.log(a)
+  }
+}
+
+const fn = create()
+const a = 2
+fn()  // 1  外部引用指向的是函数被定义的父环境
+```
+
+**面试题**：
 
 编写一个函数 multiply() ，将两个数字相乘：
 
@@ -129,6 +167,21 @@ double(11); // => 22
 ```
 
 这段代码中，anotherFunc 和它外部环境引用组合形成闭包。当我们执行`double(5)`时，按说`multiply(2)`已经执行完了，词法环境该被删除了，但是我们依然访问到了 multiply 词法环境中的 number1，因为 anotherFunc 对 multiply 的词法环境依然有引用。
+
+### 函数作为参数
+
+```js
+function print (fn) {
+  const a = 1
+  fn()
+}
+
+const a = 2
+function fn1 () {
+  console.log(a)
+}
+print(fn1) // 2
+```
 
 ### 模拟私有方法（IIFE）
 
@@ -177,7 +230,7 @@ console.log(Counter2.value()); /* logs 0 */
 var i = 0
 for (; i < 3; i++) {
   setTimeout(function log() {
-    console.log(i); // => ?
+    console.log(i); // i 是在全局环境被定义的
   }, 1000);
 }
 ```
@@ -200,9 +253,81 @@ for (; i < 3; i++) {
 
 我们拿 IIFE 将 setTimeout 包裹起来之后，三个 log 函数共享的是 IIFE 的词法环境，log 函数执行三次，IIFE 会创建三个不同的词法环境，如此一来，最后的结果将会是 0，1，2。
 
+## 实际应用
+
+### 隐藏数据
+
+```js
+function createCache () {
+  const data = {}
+  return {
+    set (key, val) {
+      data[key] = val
+    }
+    get (key) {
+      return data[key]
+    }
+  }
+}
+
+// test
+const c = createCache()
+c.set('a', 1)
+console.log(c.get('a'))
+```
+
+### li 标签绑定事件
+
+创建多个 li 标签，点击分别弹出对应的序号。
+
+```js
+// i 在全局作用域，点击全部都是 10
+let i, a
+for(i=0; i < 10; i++) {
+  a = document.createElement('a')
+  a.innerHTML = `<li>${i}</li><br>`
+  a.addEventListener('click', (e) => {
+    e.preventDefault
+    console.log(i)
+  })
+  document.body.appendChild(a)
+}
+
+// 方案一
+let a
+// let 写在这个位置，i 在块级作用域
+for(let i=0; i < 10; i++) {
+  a = document.createElement('a')
+  a.innerHTML = `<li>${i}</li><br>`
+  a.addEventListener('click', (e) => {
+    e.preventDefault
+    console.log(i)
+  })
+  document.body.appendChild(a)
+}
+
+// 方案二
+let i, a
+for(i=0; i < 10; i++) {
+  a = document.createElement('a')
+  a.innerHTML = `<li>${i}</li><br>`
+  // index 定义在块级作用域
+  const index = i
+  a.addEventListener('click', (e) => {
+    e.preventDefault
+    console.log(index)
+  })
+  document.body.appendChild(a)
+}
+```
+
 ## 性能问题
 
 因为闭包可以保存词法环境，所以影响代码的处理速度和增加内存消耗。
+
+## 常见的坑
+
+todo
 
 ## 参考
 

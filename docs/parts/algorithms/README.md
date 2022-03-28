@@ -12,28 +12,6 @@ title: '收集箱'
 
 [前端进阶算法 7：小白都可以看懂的树与二叉树](https://github.com/sisterAn/JavaScript-Algorithms/issues/39)
 
-## 算法
-
-- 算法思想
-  - 二分
-  - 贪心
-  - 动态规划
-- 常用算法
-  - 线性结构
-    查找
-    排序
-    新增、删除
-  - 树
-    遍历
-    新增删除（平衡树）
-  - 图
-    搜索
-    最短路径
-  - 字符串
-    KMP 算法
-    前缀匹配
-- leetcode 刷题
-
 ## 参考
 
 [JavaScript-Algorithms](https://github.com/sisterAn/JavaScript-Algorithms/issues)

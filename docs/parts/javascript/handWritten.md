@@ -7,40 +7,42 @@ title: '手写系列'
 typeof 可以正确识别：Undefined、Boolean、Number、String、Symbol、Function 等类型的数据，但是对于其他的都会认为是 object，比如 Null、Date 等，所以通过 typeof 来判断数据类型会不准确。但是可以使用 Object.prototype.toString 实现。
 
 ```js
-function typeOf(obj) {
+function _typeOf(obj) {
   return Object.prototype.toString.call(obj).slice(8, -1).toLowerCase()
 }
 
-typeOf([])        // 'array'
-typeOf({})        // 'object'
-typeOf(new Date)  // 'date'
+_typeOf()          // 'undefined'
+_typeOf([])        // 'array'
+_typeOf({})        // 'object'
+_typeOf(new Date)  // 'date'
 ```
 
 ## instanceof
 
-instanceof 运算符用于检测构造函数的 prototype 属性是否出现在某个实例对象的原型链上。
+instanceof 运算符用于检测构造函数的 prototype 对象是否出现在某个实例对象的原型链上。
 
 ```js
 function _instanceof(L, R) {
-  const O = R.prototype
+  const proto = R.prototype
   L = L.__proto__
 
   while(true) {
     if (L === null) return false
-    if (L === O) return true
+    if (L === proto) return true
     L = L.__proto__
   }
 }
 ```
 
-## new
+## new 操作符
 
 new 做了什么：
 
 1. 创建一个空的简单 JavaScript 对象（即`{}`）；
-1. 为这个新创建的对象添加属性`__proto__`，将该属性链接至构造函数的原型对象 ；
-2. 将新创建的对象作为 this 的上下文 ；
-3. 如果该函数没有返回对象，则返回 this。
+1. 为这个新创建的对象添加属性`__proto__`，并指向构造函数的原型对象 ；
+2. 将 this 指向新创建的对象；
+3. 执行构造函数内的代码（为新对象添加属性）
+4. 如果该函数没有返回对象，则返回新对象。
 
 代码实现：
 
@@ -66,11 +68,42 @@ function _new(Ctor) {
 
 参考：[能否模拟实现 JS 的 new 操作符 — 若川](https://juejin.cn/post/6844903704663949325)
 
+## apply，call，bind 三者的区别
+
+- 三者都可以改变函数的 this 对象指向。
+- 三者第一个参数都是 this 要指向的对象，如果如果没有这个参数或参数为 undefined 或 null，则默认指向全局 window。
+- 三者都可以传参，但是 apply 是数组，而 call 是参数列表，且 apply 和 call 是一次性传入参数，而 bind 可以分为多次传入。
+- bind 是返回绑定 this 之后的函数，便于稍后调用；apply 、call 则是立即执行 。
+
 ## apply
 
 ## call
 
 ## bind
+
+- 修改 this 指向为第一个参数
+- 参数可以传多个，且可以多次传入
+- 返回一个函数，函数带有初始值和参数
+
+```js
+Function.prototype._bind = function () {
+  const args = Array.from(arguments)
+  const context = args.shift()
+  const self = this
+  return function () {
+    return self.apply(context, args)
+  }
+}
+
+// test
+function fn1(a, b, c) {
+  console.log(this)
+  console.log(a, b, c)
+  return 'fn1'
+}
+const fn2 = fn1._bind({x:100}, 1, 2)
+console.log(fn2())
+```
 
 ## Promise
 

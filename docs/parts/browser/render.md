@@ -92,7 +92,7 @@ HTML 解析由两个阶段组成：
 - script 标签添加`defer`属性，脚本会等到解析完成后执行。
 - script 标签添加`async`属性，脚本会被加入任务队列。
 
-解析完成后，文档将被标识为`deferred`状态，并且触发`DOMContentLoaded`事件，意思就是可以解析带有`defer`属性的 script 脚本了。脚本解析完成后会触发`Load`事件。
+解析完成后，文档将被标识为`deferred`状态，并且触发`DOMContentLoaded`事件，意思就是可以解析带有`defer`属性的 script 脚本了。页面所有内容（图像、样式、脚本）加载完成后会触发`Load`事件。
 
 ### 生成 CSSOM Tree
 

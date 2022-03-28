@@ -1,5 +1,5 @@
 ---
-title: '学习 JavaScript 数据结构与算法'
+sidebarDepth: 1
 ---
 
 # 学习 JavaScript 数据结构与算法（第 3 版）
