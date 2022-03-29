@@ -2,7 +2,18 @@
 
 每个实例对象都有一个 `__proto__` 的私有属性指向它的构造函数的原型对象。该原型对象也有一个 `__proto__` 的私有属性指向它的构造函数的原型对象，就这样层层向上，直到构造函数 Object 的原型对象 null，这就是原型链。根据定义，null 没有原型，并作为这个原型链中的最后一个环节。
 
+下面是网络上传播很广的一张关于原型链的图：
+
 ![](../../images/js/prototype-chain.jpg)
+
+如果你觉得上面的图很乱，可以看下面我整理的这张（点击放大）：
+
+![](../../images/js/prototype-chain-2.png)
+
+**记忆口诀：**
+
+- 蓝色线：所有的对象（包括 .prototype 对象）最终都指向 Object.prototype，以继承**对象共有的属性和方法** (valueOf、hasOwnProperty 等）；
+- 红色线：所有的函数（包括构造函数），都要先指向 Function.prototype，以继承**函数共有的方法** (apply、call、bind)，然后再指向 Object.prototype。
 
 ## 基于原型链的继承
 
@@ -339,12 +350,12 @@ console.log(anotherPerson)
 
 组合继承 + 寄生式继承，通过借用构造函数来继承属性，通过原型链的混成形式来继承方法。
 
-基本思路是：修改 Cat 的原型时不再生成 Pet 的实例，而是拷贝 Pet 原型的一个副本。
+基本思路是：修改 Cat 的原型时不再生成 Pet 的实例，而是使用 `Object.create()` 创建一个新对象，这个新对象的 `__proto__`属性指向 Pet.prototype。
 
 ```js
 // 基本模式
 function inheritPrototype(Cat, Pet){
-  const proto = Object.create(Pet.prototype); // 拷贝对象
+  const proto = Object.create(Pet.prototype); // 创建对象
   proto.constructor = Cat; // 修改指针
   Cat.prototype = proto; // 修改原型
 }
@@ -364,37 +375,59 @@ function Cat(name, age){
   this.age = age;
 }
 
-// 继承方法时不再使用 Pet 的实例，而是拷贝 Pet 对象
+// 继承方法时不再使用 Pet 的实例
 inheritPrototype(Cat, Pet);
 Cat.prototype.sayAge = function(){};
 
 const cat = new Cat("小明", 3)
-console.log(cat)
+console.dir(cat)
 ```
 
 ```yaml
 # cat 实例在 chrome 控制台显示的原型链结构
 
+Cat
 age: 3
-colors: (3) ['red', 'blue', 'green'] # Pet 的属性已经拥有
+colors: (3) ['red', 'blue', 'green']
 name: "小明"
-[[Prototype]]: Object
-  sayAge: ƒ () # Pet 的方法已经继承
-  sayName: ƒ ()
+# 此对象由 Object.create 创建，__proto__ 指向 Pet.prototype 对象
+[[Prototype]]: Pet
   constructor: ƒ Cat(name, age)
+  sayAge: ƒ ()
+  # 这个是 Pet.prototype 对象
   [[Prototype]]: Object
-    constructor: ƒ Object()
-    hasOwnProperty: ƒ hasOwnProperty()
-    toString: ƒ toString()
-    valueOf: ƒ valueOf()
-    ...
+    constructor: ƒ Pet(name)
+    sayName: ƒ ()
+    [[Prototype]]: Object
+      constructor: ƒ Object()
+      hasOwnProperty: ƒ hasOwnProperty()
+      toString: ƒ toString()
+      valueOf: ƒ valueOf()
+      ...
 ```
+
+![](../../images/js/Parasitic-Combination-Inheritance.png)
 
 ## ES6 extends
 
 ES6 类支持单继承。使用 extends 关键字，就可以继承任何拥有`[[Construct]]`和原型的对象。很大程度上，这意味着不仅可以继承一个类，也可以继承普通的构造函数（保持向后兼容）。
 
-因为浏览器的兼容性问题，如果遇到不支持 ES6 的浏览器，那么就得利用 babel 这个编译工具，将 ES6 的代码编译成 ES5，让一些不支持新语法的浏览器也能运行。extends 编译之后采用的也是**寄生组合式继承**。
+因为浏览器的兼容性问题，如果遇到不支持 ES6 的浏览器，那么就得利用 babel 这个编译工具，将 ES6 的代码编译成 ES5，让一些不支持新语法的浏览器也能运行。
+
+<!-- extends 编译之后采用的也是**寄生组合式继承**。 -->
+
+```js
+class Pet {}
+class Cat extends Pet {}
+
+const cat = new Cat()
+console.dir(cat)
+```
+
+请注意图中的绿色线，是 extends 继承与寄生组合式继承的区别！
+
+![](../../images/js/class-extends.png)
+
 
 ## 参考
 

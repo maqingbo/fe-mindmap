@@ -39,9 +39,9 @@ result();
 
 当我们的代码执行完`let result = fn1()`这一句的时候，`fn1`函数已经执行完毕，那它所对应的执行上下文就会从函数调用栈中出栈，词法环境也应该从内存中删除。但我们在执行下一行代码`fn2()`时却依然能打印出 **111**！这说明`fn1`的词法环境并没有被完全删除。
 
-JavaScript 使用的是静态作用域，在函数调用栈执行函数时，执行上下文、作用域也是被顺序创建和销毁的，但是 JS 中的函数也可以作为参数或返回一个函数，此时子函数的销毁时间晚于父函数的，假如父函数销毁了，子函数依然引用了父函数中的变量，怎么办？
+JavaScript 使用的是静态作用域，在函数调用栈执行函数时，执行上下文、词法环境也是被顺序创建和销毁的。但是 JS 中的函数也可以作为参数或返回一个函数，此时子函数的销毁时间晚于父函数的，假如父函数销毁了，子函数依然引用了父函数中的变量，怎么办？
 
-闭包就是为了处理这一情况，父函数销毁前，引擎会把**子函数引用到的变量**（不是全部）打包成 Closure 放到子函数的 `[[Scopes]]` 属性上，保证即使父函数销毁了，子函数也能访问它的外部引用。
+闭包就是为了处理这种情况，父函数销毁前，引擎会把**子函数引用到的变量**（不是全部）保留，打包成 Closure 放到子函数的 `[[Scopes]]` 属性上，保证即使父函数销毁了，子函数也能访问这部分引用。
 
 ```yaml
 # Chrome 控制台打印的 result
@@ -61,7 +61,7 @@ JavaScript 使用的是静态作用域，在函数调用栈执行函数时，执
     2: Global {window: Window, self: Window, document: document, …}
 ```
 
-### 一个讨论
+### 一个需要注意的点
 
 有如下代码：
 
@@ -100,9 +100,11 @@ console.dir(clo);
     2: Global {window: Window, self: Window, document: document, …}
 ```
 
-上面代码中，fn3 对 fn1 的变量进行了引用，我们只 return 了 fn2，为什么 fn2 的 `[[Scopes]]` 中出现了 Closure 字段？
+上面代码中，fn3 对 fn1 的变量进行了引用，但我们只 return 了 fn2，为什么 fn2 的 `[[Scopes]]` 中出现了 Closure 字段？
 
-**猜测**：可能是 Chrome 在销毁父函数的词法环境时，检测到被引用的变量时，直接打包并插入到所有子函数的`[[Scopes]]`中，不对子函数进行区分。
+原因是引擎在销毁父函数的词法环境时，检测到被引用的变量时，直接将相关变量打包并插入到所有子函数的`[[Scopes]]`中，不对子函数进行区分。ES 规范也并没有对这一点进行强制优化。一部分引擎在优化这一部分时，发现付出与收获并不成正比，所以放弃了优化，直接分发给所有的子函数。
+
+我也把这个问题发到了网上，有兴趣可以去看下讨论：[segmentfault](https://segmentfault.com/q/1010000041620040)，[stackoverflow](https://stackoverflow.com/questions/71644055/javascript-closure-in-chrome)
 
 ## 出现场景
 
@@ -173,12 +175,13 @@ double(11); // => 22
 ```js
 function print (fn) {
   const a = 1
+  console.dir(fn)
   fn()
 }
 
-const a = 2
+const aa = 2
 function fn1 () {
-  console.log(a)
+  console.log(aa)
 }
 print(fn1) // 2
 ```
@@ -237,21 +240,39 @@ for (; i < 3; i++) {
 
 这段代码中，函数 log 可以访问外部词法环境中的变量`i`，循环了三次，所以其实是三个 log 函数共享一个外部词法环境。由于 setTimeout 的异步行为，导致 log 函数在执行时 for 循环已经结束，词法环境中的变量`i`被修改成了 3，所以三个 log 函数打印出了三个 3.
 
-我们修改一下上面的代码：
-
 ```js
+// 解法一，闭包
 var i = 0
 for (; i < 3; i++) {
   (function () {
     var j = i
     setTimeout(function log() {
+      console.dir(log)
       console.log(j); // => ?
     }, 1000);
   })()
 }
 ```
 
-我们拿 IIFE 将 setTimeout 包裹起来之后，三个 log 函数共享的是 IIFE 的词法环境，log 函数执行三次，IIFE 会创建三个不同的词法环境，如此一来，最后的结果将会是 0，1，2。
+我们拿 IIFE 将 setTimeout 包裹起来之后，三个 log 函数共享的是 IIFE 的词法环境。for 循环三次，IIFE 执行三次，会创建三个不同的词法环境，log 函数执行时虽然 IIFE 已经执行完了，但是词法环境没销毁，log 函数依然能访问，所以最后的结果将会是 0，1，2。
+
+这种解法中，console.dir(log) 执行时可以看到 log 函数 `[[scopes]]` 属性上的 Closure 字样。
+
+```js
+// 另一种解法
+var i = 0
+for (; i < 3; i++) {
+  {
+    var j = i
+    setTimeout(function log() {
+      console.dir(log)
+      console.log(j); // => ?
+    }, 1000);
+  }
+}
+```
+
+用 `{}` 将 setTimeout 包裹起来之后，for 循环三次会形成三个词法环境，最后的结果将会是 0，1，2。
 
 ## 实际应用
 
