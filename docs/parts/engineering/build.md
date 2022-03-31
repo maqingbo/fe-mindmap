@@ -178,3 +178,4 @@ sourceMap 其实并不是 Webpack 特有的功能，而是 Webpack 支持 source
 - [当面试官问 Webpack 的时候他想知道什么](https://juejin.cn/post/6943468761575849992)
 - [构建 webpack5.x 知识体系](https://juejin.cn/post/7023242274876162084)
 - [AST 抽象语法树——最基础的 javascript 重点知识，99%的人根本不了解](https://segmentfault.com/a/1190000016231512)
+- [撸一个简版的 Webpack](https://segmentfault.com/a/1190000021494964)

@@ -103,34 +103,11 @@ Content-Type: text/html; charset=UTF-8
 
 ### GET 和 POST 区别
 
-**数据存放位置**
-
-- GET：将数据拼接在 URL 之后。
-- POST：数据放在 Request Body 中（也可以放在 url，不推荐）
-
-**数据大小限制**
-
-- GET：所提交数据的大小有限制（因为客户端对 URL 的长度有限制）。
-- POST：没有限制。
-
-**安全性**
-
-- GET：所提交的数据以明文的形式显示在 URL 上。
-- POST：由于保存在 Request Body 中，增加了安全系数。
-
-**缓存**
-
-- GET：缓存服务器返回的响应。
-- POST：不缓存。
-
-**数据包**
-
-GET 会产生一个 TCP 数据包，而 POST 会产生两个 TCP 数据包。（不是所有浏览器）
-
-详细的说就是：
-
-对于 GET 方式的请求，浏览器会把 http header 和 data 一并发送出去，服务器响应 200（返回数据）;
-而对于 POST，浏览器先发送 header，服务器响应 100 continue，浏览器再发送 data，服务器响应 200 ok（返回数据）。
+- 数据存放位置：GET 将数据拼接在 URL 之后。POST 数据放在 Request Body 中（也可以放在 url，不推荐）
+- 数据大小限制：GET：所提交数据的大小有限制（客户端对 URL 的长度有限制，2kb）。POST：没有限制。
+- GET 参数会被保存在浏览器历史记录里，POST 不会；
+- GET 在浏览器回退时是无害的，POST 会再次发请求；
+- GET 主动缓存服务器返回的响应。POST 需手动设置。
 
 ## 常见状态码
 
@@ -312,6 +289,10 @@ https
 Restful API：把每个 url 当做一个唯一的资源。
 
 - method 表示操作类型
+
+## Axios
+
+核心功能。
 
 ## 参考
 

@@ -22,7 +22,7 @@ DOM2 Events 规范规定事件流分为 3 个阶段：`事件捕获`、`到达�
 <div onclick="console.log('Clicked')"></div>
 ```
 
-- **DOM 0 事件处理程序**
+- **DOM0 级事件处理程序**
 
 把一个函数赋值给（DOM 元素的）一个事件处理程序属性。
 
@@ -33,7 +33,7 @@ btn.onclick = function() {
 };
 ```
 
-- **DOM2 事件处理程序**
+- **DOM2 级事件处理程序**
 
 DOM2 Events 为事件处理程序的赋值和移除定义了两个方法： `addEventListener()` 和 `removeEventListener()`。这两个方法暴露在所有 DOM 节点上，它们接收 3 个参数：事件名、事件处理函数和一个布尔值， true 表示在捕获阶段调用事件处理程序， false（默认值）表示在冒泡阶段调用事件处理程序。
 
@@ -43,6 +43,8 @@ btn.addEventListener("click", () => {
   console.log(this.id);
 }, false);
 ```
+
+优点：可绑定多个事件。
 
 ## 事件对象
 
@@ -195,6 +197,14 @@ element.onerror = function (event) {
 ### onload、onloadstart
 
 元素完成加载时，会触发 load 事件，执行`onload()`。它的典型使用场景是 window 对象和`<img>`元素。对于 window 对象来说，只有页面的所有资源加载完成（包括图片、脚本、样式表、字体等所有外部资源），才会触发 load 事件。
+
+以下元素加载完成时都会触发 onload 事件：
+
+```html
+<frame>, <frameset>, <iframe>, 
+<body>, <link>, <script>, <style>
+<img>, <input type="image">, 
+```
 
 对于`<img>`和`<video>`等元素，加载开始时还会触发 loadstart 事件，导致执行 onloadstart。
 

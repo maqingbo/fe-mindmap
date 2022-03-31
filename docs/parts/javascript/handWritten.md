@@ -51,7 +51,6 @@ function _new(Ctor) {
   if (typeof Ctor !== 'function') {
     throw new TypeError(Ctor + ' is not a constructor')
   }
-
   // es6
   _new.target = Ctor
   const obj = Object.create(Ctor.prototype) // 步骤 1，2，4
@@ -61,8 +60,9 @@ function _new(Ctor) {
   const isFunction = typeof result === 'function'
   if (isObject || isFunction) { // 步骤 5
     return result
+  } else {
+    return obj
   }
-  return obj
 }
 ```
 

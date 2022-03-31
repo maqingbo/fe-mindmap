@@ -75,7 +75,6 @@ module.exports = {
         children: [
           ['/parts/browser/', '收集箱'],
           ['/parts/browser/render', '内部原理'],
-          ['/parts/browser/cache', '缓存'],
           ['/parts/browser/client', '客户端能力'],
           ['/parts/browser/performance', '性能优化'],
           ['/parts/browser/interview', '面试题']
