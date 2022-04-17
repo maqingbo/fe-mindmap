@@ -21,3 +21,4 @@ function loadImg (src) {
 
 - [Promise/async/Generator 实现原理解析](https://juejin.cn/post/6844904096525189128)
 - [Promise 之你看得懂的 Promise](https://juejin.cn/post/6844903629187448845)
+- [Callbacks Vs Promises and basics of JS](https://theflyingmantis.medium.com/callbacks-vs-promises-and-basics-of-js-80d3d1515e81)

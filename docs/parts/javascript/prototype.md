@@ -424,17 +424,24 @@ const cat = new Cat()
 console.dir(cat)
 ```
 
-请注意图中的绿色线，是 extends 继承与寄生组合式继承的区别！
-
 ![](../../images/js/class-extends.png)
 
+请注意图中的绿色线，是 extends 继承与寄生组合式继承的区别！
+
+区别：在 ES6 中，父类的静态方法，可以被子类继承。这是因为 Class 作为构造函数的语法糖，同时有 `prototype` 属性和 `__proto__` 属性，因此同时存在两条继承链。
+
+- 子类的 `__proto__` 属性，表示构造函数的继承，总是指向父类。
+- 子类 `prototype` 属性的 `__proto__` 属性，表示方法的继承，总是指向父类的 `prototype` 属性。
+
+```js
+class Parent {}
+class Child extends Parent {}
+
+console.log(Child.__proto__ === Parent) // true
+console.log(Child.prototype.__proto__ === Parent.prototype) // true
+```
 
 ## 参考
 
 - [《JavaScript 高级程序设计（第 3 版）》](https://book.douban.com/subject/10546125/)
----
-
-- 组合寄生继承、class 继承
-  - 区别，举例
-- 如何创建类 function、class 类
-- 
+- [ES6 系列之 Babel 是如何编译 Class 的（下） ](https://github.com/mqyqingfeng/Blog/issues/106)

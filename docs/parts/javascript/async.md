@@ -31,14 +31,26 @@
 
 ## 事件循环（Event Loop）
 
-JS 中有两种任务类型：微任务（microtask）和宏任务（macrotask），在 ES6 中，微任务称为 jobs，宏任务称为 task：
+- JS 代码分为同步和异步，执行的方式是主线程+任务队列；
+- 同步代码会在主线程执行，异步代码会进入 Event Table 并注册回调函数，当指定的事情（定时器、ajax 请求、IO 操作等）完成时，Event Table 会将这个回调函数添加到任务队列；
+- 任务队列中的任务分为微任务（microtask）和宏任务（macrotask）；
+- 主线程内的代码执行完毕之后，JS 引擎会去任务队列读取所有的微任务，放入主线程执行；
+- 微任务执行完之后，开始读取宏任务，然后放到主线程执行；
+- 每个宏任务执行完之后，都会把所有的微任务执行完，然后执行下一个宏任务；
+- 主线程 > 微任务 > 宏任务，这个过程不断重复，就是事件循环。
+
+> 在 ES6 中，微任务称为 jobs，宏任务称为 task.
 
 - **宏任务**：script （主代码块）、setTimeout 、setInterval 、setImmediate 、I/O 、UI rendering
 - **微任务**：process.nextTick（Nodejs） 、Promise 、Object.observe 、MutationObserver
 
+![](../../images/js/event-loop.png)
+
 ![](../../images/js/event-loop.gif)
 
 - [stackoverflow](https://stackoverflow.com/questions/25915634/difference-between-microtask-and-macrotask-within-an-event-loop-context)
+- [一次弄懂 Event Loop](https://juejin.cn/post/6844903764202094606)
+- [这一次，彻底弄懂 JavaScript 执行机制](https://juejin.cn/post/6844903512845860872)
 
 - Node.js 中 Event Loop 和浏览器中 Event Loop 有什么区别？
 

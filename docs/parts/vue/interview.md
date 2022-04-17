@@ -1,25 +1,44 @@
-## Vue 实例化对象过程
+## 谈谈对 vue 生命周期的理解
 
-- 初始化
+每个 Vue 实例在创建时都会经过一系列的初始化过程，生命周期钩子，就是在初始化过程中的某个阶段，去触发指定的函数，目的是完成一些动作或事件。
 
-```yaml
+- create 阶段：（Vue 实例被创建）
+  - beforeCreate：此时 data 和 methods 中的数据都还没有初始化
+  - created： 初始化完毕，data 中有值，未挂载，此时可以请求数据
+- mount 阶段：挂载真实的 DOM 节点
+  - beforeMount：尚未挂载
+  - mounted：已挂载，此时可操作 DOM
+- update 阶段：当 vue 实例里面的 data 数据变化时，触发 virtual DOM 的更新和 DOM 的重新挂载
+  - beforeUpdate : 更新前。在这之后开始 diff virtual DOM，
+  - updated：更新后
+- destroy 阶段：vue 实例被销毁
+  - beforeDestroy：销毁前，可以手动的卸载一些事件
+  - destroy：销毁后
+
+下面的代码展现了 Vue 实例初始化的大概流程。
+
+```js
 _init() {
   vm.$options = mergeOptions()
   initLifecycle(vm)
   initEvents(vm)
   initRender(vm)
+  // 第一个钩子函数
   callHook(vm, 'beforeCreate')
-  initInjections(vm)
-  initState(vm)
-    initProps
-    initMethods
-    initData()
+  initState(vm) {
+    initProps()
+    initMethods()
+    initData() {
       observe()
+        // 创建 dep 实例来保存依赖
         Observer()
           this.dep = new Dep()
+    }
     initComputed()
     initWatch()
+  }
   initProvide(vm)
+  // 初始化完毕之后，第二个钩子函数
   callHook(vm, 'created')
 }
 vm.$mount(vm.$options.el);
@@ -39,8 +58,8 @@ createCompilerCreator(baseCompile)
 vue 2.0 版本使用的是 Object.defineProperty 方法。
 
 - initState 阶段，新建一个 dep 实例存放依赖；
-- 遍历 data 里面的对象，使用 Object.defineProperty 修改对象属性的 get、set 特性。get 的时候使用 dep.depend 方法收集属性对应的依赖 (watch)，set 的时候使用 dep.notify 触发依赖。
-- 之后当依赖项的 setter 被调用时，会通知 watcher 重新计算，从而使关联的组件得以更新；
+- 然后 vue 会遍历 data 里面的对象，使用 Object.defineProperty 修改对象属性的 get、set 特性。
+- 在这之后，当我们触发对象属性的 getter 的时候 vue 会使用 dep.depend 方法收集属性对应的依赖 (watch)，触发 setter 的时候会通知 watcher 重新计算，使用 dep.notify 触发依赖，从而使关联的组件得以更新；
 - watcher 是组件级别的，组件内部的更新需要使用 virtual DOM 的 diff 算法进行局部更新；
 
 ## 单向数据流

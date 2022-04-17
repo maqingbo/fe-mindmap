@@ -66,7 +66,8 @@ module.exports = {
           ['/parts/webApis/event', '事件'],
           ['/parts/webApis/BOM', 'BOM'],
           ['/parts/webApis/ajax', 'Ajax'],
-          ['/parts/webApis/storage', '本地存储']
+          ['/parts/webApis/storage', '本地存储'],
+          ['/parts/webApis/WebGL', 'WebGL']
         ]
       },
       {
@@ -127,6 +128,17 @@ module.exports = {
           ['/parts/algorithms/sort', '排序'],
           ['/parts/algorithms/topic', '题目'],
           ['/parts/algorithms/bookNote', '学习JavaScript数据结构与算法']
+        ]
+      },
+      {
+        title: '软件设计',
+        collapsable: false,
+        children: [
+          ['/parts/design/', '收集箱'],
+          ['/parts/design/language', '程序设计语言'],
+          ['/parts/design/paradigm', '编程范式'],
+          ['/parts/design/pattern', '设计模式'],
+          ['/parts/design/method', '设计方法']
         ]
       }
     ]

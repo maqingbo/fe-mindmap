@@ -494,31 +494,35 @@ function parseParam(url) {
 
 ## 函数防抖（debounce）
 
-触发高频事件 N 秒后只会执行一次，如果 N 秒内事件再次触发，则会重新计时。
+其实是从机械开关和继电器的“去弹跳”（debounce）衍生出来的，基本思路就是把多个信号合并为一个信号。
+
+触发高频事件 N 秒后只会执行最后一次，如果 N 秒内事件再次触发，则会重新计时。
+
+常见场景：input 输入、按钮提交。
 
 简单版：函数内部支持使用 this 和 event 对象；
 
 ```js
-function debounce(func, wait) {
-    var timeout;
-    return function () {
-        var context = this;
-        var args = arguments;
-        clearTimeout(timeout)
-        timeout = setTimeout(function(){
-            func.apply(context, args)
-        }, wait);
-    }
+function debounce(fn, wait) {
+  const timer
+  return function () {
+    const context = this
+    const args = arguments
+    clearTimeout(timer)
+    timer = setTimeout(function(){
+      fn.apply(context, args)
+    }, wait)
+  }
 }
 ```
 
 使用：
 
 ```js
-var node = document.getElementById('layout')
+const node = document.getElementById('layout')
 function getUserAction(e) {
-    console.log(this, e)  // 分别打印：node 这个节点 和 MouseEvent
-    node.innerHTML = count++;
+  console.log(this, e)  // 分别打印：node 这个节点 和 MouseEvent
+  node.innerHTML = count++;
 };
 node.onmousemove = debounce(getUserAction, 1000)
 ```
@@ -531,34 +535,34 @@ node.onmousemove = debounce(getUserAction, 1000)
 
 ```js
 function debounce(func, wait, immediate) {
-    var timeout, result;
+  const timeout, result;
 
-    var debounced = function () {
-        var context = this;
-        var args = arguments;
+  const debounced = function () {
+    const context = this;
+    const args = arguments;
 
-        if (timeout) clearTimeout(timeout);
-        if (immediate) {
-            // 如果已经执行过，不再执行
-            var callNow = !timeout;
-            timeout = setTimeout(function(){
-                timeout = null;
-            }, wait)
-            if (callNow) result = func.apply(context, args)
-        } else {
-            timeout = setTimeout(function(){
-                func.apply(context, args)
-            }, wait);
-        }
-        return result;
-    };
-
-    debounced.cancel = function() {
-        clearTimeout(timeout);
+    if (timeout) clearTimeout(timeout);
+    if (immediate) {
+      // 如果已经执行过，不再执行
+      const callNow = !timeout;
+      timeout = setTimeout(function(){
         timeout = null;
-    };
+      }, wait)
+      if (callNow) result = func.apply(context, args)
+    } else {
+      timeout = setTimeout(function(){
+        func.apply(context, args)
+      }, wait);
+    }
+    return result;
+  };
 
-    return debounced;
+  debounced.cancel = function() {
+    clearTimeout(timeout);
+    timeout = null;
+  };
+
+  return debounced;
 }
 ```
 
@@ -577,28 +581,35 @@ setUseAction.cancel()
 
 ## 函数节流（throttle）
 
-触发高频事件，且 N 秒内只执行一次。
+节流的概念可以想象一下水坝，你建了水坝在河道中，不能让水流动不了，你只能让水流慢些。
+
+- debounce：用户的方法都不执行，n 秒后执行一次；
+- throttle：触发太多了，筛一下，n 秒执行一次；
+
+![](../../images/js/debounce-throttle.png)
+
+节流会用在比 input, keyup 更频繁触发的事件中，如 resize, touchmove, mousemove, scroll等。
 
 简单版：使用时间戳来实现，立即执行一次，然后每 N 秒执行一次。
 
 ```js
 function throttle(func, wait) {
-    var context, args;
-    var previous = 0;
+  const context, args
+  const previous = 0
 
-    return function() {
-        var now = +new Date();
-        context = this;
-        args = arguments;
-        if (now - previous > wait) {
-            func.apply(context, args);
-            previous = now;
-        }
+  return function() {
+    const now = +new Date()
+    context = this
+    args = arguments
+    if (now - previous > wait) {
+      func.apply(context, args)
+      previous = now
     }
+  }
 }
 ```
 
-最终版：支持取消节流；另外通过传入第三个参数，options.leading 来表示是否可以立即执行一次，opitons.trailing 表示结束调用的时候是否还要执行一次，默认都是 true。 注意设置的时候不能同时将 leading 或 trailing 设置为 false。
+最终版：支持取消节流；另外通过传入第三个参数，options.leading 来表示是否可以立即执行一次，options.trailing 表示结束调用的时候是否还要执行一次，默认都是 true。 注意设置的时候不能同时将 leading 或 trailing 设置为 false。
 
 ```js
 function throttle(func, wait, options) {
@@ -651,9 +662,10 @@ function throttle(func, wait, options) {
 
 ```js
 function add(a, b, c) {
-    return a + b + c
+  return a + b + c
 }
 add(1, 2, 3)
+
 let addCurry = curry(add)
 addCurry(1)(2)(3)
 ```
@@ -662,11 +674,13 @@ addCurry(1)(2)(3)
 
 ```js
 function curry(fn) {
-    let judge = (...args) => {
-        if (args.length == fn.length) return fn(...args)
-        return (...arg) => judge(...args, ...arg)
+  const judge = (...args) => {
+    if (args.length == fn.length) {
+      return fn(...args)
     }
-    return judge
+    return (...arg) => judge(...args, ...arg)
+  }
+  return judge
 }
 ```
 
