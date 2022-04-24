@@ -50,6 +50,7 @@ JS 是一种多范式的动态语言，它包含类型、运算符、标准内�
 - 手写递归循环
 
 ```js
+// 手写示例
 function deepClone(obj, hash = new WeakMap()) {
   if (obj === null) return obj; // 如果是 null 或者 undefined 我就不进行拷贝操作
   if (obj instanceof Date) return new Date(obj);
@@ -81,3 +82,19 @@ function deepClone(obj, hash = new WeakMap()) {
 
 - [深入理解 Chrome V8 垃圾回收机制](https://github.com/yacan8/blog/issues/33)
 - [[译] JavaScript 工作原理：内存管理 + 处理常见的 4 种内存泄漏](https://juejin.cn/post/6844903519078580238)
+
+## SDK 和 API
+
+- **SDK**：软件开发工具包，全称 Software Development Kit。辅助开发某一类软件的相关文档、范例和工具的集合都可以叫做 SDK。
+- **API**：程序编程接口，全称 Application Programming Interface。本质是预先定义的函数，用来让其他程序调用自身的一些功能。
+
+类比：
+
+- 有一杯密封饮料，饮料就叫 **SDK**；
+- 饮料上插着吸管，吸管就叫 **API**；
+- 如果你想喝到饮料，你必须通过这根吸管来实现，
+- 想让系统拥有 SDK 中的功能，通过 API 连接你的系统和 SDK。
+
+## JS-SDK
+
+- [如何打造一款标准的 JS-SDK](https://zhuanlan.zhihu.com/p/276080506)

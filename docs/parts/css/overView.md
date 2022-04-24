@@ -2,17 +2,19 @@
 title: '概览'
 ---
 
-## W3C 推荐标准
+## W3C 标准审核流程
 
-W3C 要求每个规范都要经过以下五个阶段：
+W3C 推荐的每个标准都会经历以下五个阶段：
 
-1. 工作草案（WD，Working Draft）
-2. 最终工作草案（LC/LCWD，Last Call Working Draft）
+1. 首次发布的工作草案（FPWD，First Public Working Draft）
+2. 修订版工作草案（WD，Working Draft）
 3. 候选推荐（CR，Candidate Recommendation）
 4. 提议推荐（PR，Proposed Recommendation）
 5. 推荐标准（REC，Recommendation）
 
 其中候选推荐（CR）阶段，标准文档还可能发生进一步的修改，但此时重大的特性大部分已经锁定。
+
+![](../../images/css/w3c-rec-track.png)
 
 ## CSS 历史
 
@@ -87,6 +89,7 @@ CSS 2.1 主要定义了以下内容：
 
 ## 参考
 
+- [w3.org - rec-track](https://www.w3.org/2021/Process-20211102/#rec-track)
 - [w3.org - CSS/current-work](https://www.w3.org/Style/CSS/current-work)
 - [w3.org - CSS snapshot](https://www.w3.org/TR/css-2017/)
 - [MDN - CSS](https://developer.mozilla.org/zh-CN/docs/Web/CSS)

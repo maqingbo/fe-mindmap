@@ -65,3 +65,4 @@
 ## 参考
 
 - [软件设计之美 - 极客时间](https://time.geekbang.org/column/intro/100052601)
+- [聊聊编程范式](https://zhuanlan.zhihu.com/p/354528902)

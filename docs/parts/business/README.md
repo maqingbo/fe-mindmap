@@ -1,0 +1,8 @@
+- 数据打点上报
+- 前端监控
+- A/B 测试
+- “服务端推”
+- 动效
+- 水印
+  - [从破解某设计网站谈前端水印](https://segmentfault.com/a/1190000038365780)
+  - [前端也能玩的图片隐写术](http://www.alloyteam.com/2016/03/image-steganography/)

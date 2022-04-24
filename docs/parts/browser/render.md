@@ -66,7 +66,7 @@ XMLHttpRequest 连接后浏览器开的一个线程，比如请求有回调函�
 
 用户请求的 HTML 文本 (text/html) 通过浏览器的网络层到达渲染引擎后，渲染工作开始。每次通常渲染不会超过 8K 的数据块，其中基础的渲染流程图：
 
-![Rendering engine basic flow](../../images/browser/flow.png)
+![Rendering engine basic flow](../../images/browser/flow.png)   
 _Rendering engine basic flow_
 
 - **解析 HTML 生成 DOM tree**：渲染引擎首先解析 HTML 文档，将各个标签转化成 DOM 节点，生成 DOM Tree。
@@ -116,7 +116,7 @@ HTML 解析由两个阶段组成：
 
 - 并非一一对应：不可见元素（meta、head），设置了`display: none`的元素将不会出现在 Render Tree 中；
 - 一些 DOM 元素会对应多个 Render Tree 节点 (Render Object)，比如`select`元素；
-- 另一个一对多的情况：根据 CSS 2.1 规范，一个行内元素只能包含一个行内元素或块级元素，如果既包含了会计也包含了行内元素，解析器则会创建匿名的 block render object 以包裹外面的行内元素。
+- 另一个一对多的情况：根据 CSS 2.1 规范，一个行内元素只能包含一个行内元素或块级元素，如果既包含了块级也包含了行内元素，解析器则会创建匿名的 block render object 以包裹外面的行内元素。
 - 一些 Render Tree 节点在树中的位置与 DOM Tree 中不一致，比如使用了浮动和绝对定位的元素。
 
 ![](../../images/browser/rendertree-domtree.png)

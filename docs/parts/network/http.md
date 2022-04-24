@@ -294,6 +294,37 @@ Restful API：把每个 url 当做一个唯一的资源。
 
 核心功能。
 
+## 附录
+
+### MIME
+
+结构：
+
+```
+type/subtype
+```
+
+MIME 的组成结构非常简单；由类型与子类型两个字符串中间用'/'分隔而组成。不允许空格存在。type 表示可以被分多个子类的独立类别。subtype 表示细分后的每个类型。
+
+| 类型        | 描述                                               | 典型示例                                                                                                                                 |
+| ----------- | -------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| text        | 表明文件是普通文本，理论上是人类可读               | text/plain, text/html, text/css, text/javascript                                                                                         |
+| image       | 表明是某种图像。不包括视频，但是动态图（比如 gif） | image/gif, image/png, image/jpeg, image/bmp, image/webp, image/x-icon, image/vnd.microsoft.icon                                          |
+| audio       | 表明是某种音频文件                                 | audio/midi, audio/mpeg, audio/webm, audio/ogg, audio/wav                                                                                 |
+| video       | 表明是某种视频文件                                 | video/webm, video/ogg                                                                                                                    |
+| application | 表明是某种二进制数据                               | application/octet-stream, application/pkcs12,<br> application/vnd.mspowerpoint, application/xhtml+xml, application/xml,  application/pdf |
+
+对于 text 文件类型若没有特定的 subtype，就使用 text/plain。类似的，二进制文件没有特定或已知的 subtype，即使用 application/octet-stream。
+
+Multipart 类型
+
+```
+multipart/form-data
+multipart/byteranges
+```
+
+Multipart 类型表示细分领域的文件类型的种类，经常对应不同的 MIME 类型。这是复合文件的一种表现方式。multipart/form-data 可用于联系 HTML Forms 和 POST 方法，此外 multipart/byteranges 使用状态码 206 Partial Content 来发送整个文件的子集，而 HTTP 对不能处理的复合文件使用特殊的方式：将信息直接传送给浏览器（这时可能会建立一个“另存为”窗口，但是却不知道如何去显示内联文件。）
+
 ## 参考
 
 - [HTTP cookies - MDN](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Cookies)

@@ -135,4 +135,4 @@ todo
 - [WebGL 技术储备指南](https://juejin.cn/post/6844903425272987662)
 - [DirectX 和 OpenGL - 极客湾](https://www.youtube.com/watch?v=3OYNerkxI-U&ab_channel=%E6%9E%81%E5%AE%A2%E6%B9%BEGeekerwan)
 - [快速上手 Three.js - 奇乐编程学院](https://www.bilibili.com/video/BV1zU4y1L7Go?spm_id_from=333.999.0.0)
-- []()
+- [puxiao - Github](https://github.com/puxiao/threejs-tutorial)

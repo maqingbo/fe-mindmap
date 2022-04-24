@@ -59,8 +59,26 @@ vue 2.0 版本使用的是 Object.defineProperty 方法。
 
 - initState 阶段，新建一个 dep 实例存放依赖；
 - 然后 vue 会遍历 data 里面的对象，使用 Object.defineProperty 修改对象属性的 get、set 特性。
-- 在这之后，当我们触发对象属性的 getter 的时候 vue 会使用 dep.depend 方法收集属性对应的依赖 (watch)，触发 setter 的时候会通知 watcher 重新计算，使用 dep.notify 触发依赖，从而使关联的组件得以更新；
+- 在这之后，当我们触发对象属性的 getter 的时候 vue 会使用 dep.depend 方法收集属性对应的依赖 (watch)，触发 setter 的时候使用 dep.notify 触发依赖，通知 watcher 重新计算，从而使关联的组件得以更新；
 - watcher 是组件级别的，组件内部的更新需要使用 virtual DOM 的 diff 算法进行局部更新；
+
+## Diff 算法
+
+Diff 算法是一种对比算法。对比两者是 old VNode 和 new VNode，对比出是哪个虚拟节点更改了，找出这个虚拟节点，并只更新这个虚拟节点所对应的真实节点，而不用更新其他数据没发生改变的节点，实现精准地更新真实 DOM，从而提高效率。
+
+Vue 中的 diff 使用的是`深度优先算法`，只在同层进行对比，时间复杂度`O(n)`。
+
+- 对比当前同层的虚拟节点是否为同一种类型的标签；
+  - 当 key、tag、isComment、data 相同，同时满足当标签类型为 input 的时候 type 相同。
+  - 是：继续执行 patchVnode 方法进行深层比对
+  - 否：没必要比对了，直接整个节点替换成新虚拟节点
+- patchVnode
+  - 如果新旧 VNode 都是静态的，同时它们的 key 相同（代表同一节点），并且新的 VNode 是 clone 或者是标记了 once（标记 v-once 属性，只渲染一次），那么只需要替换 elm 以及 componentInstance 即可。
+  - 新老节点均有 children 子节点，则对子节点进行 diff 操作，调用 updateChildren，这个 updateChildren 也是 diff 的核心。
+  - 如果老节点没有子节点而新节点存在子节点，先清空老节点 DOM 的文本内容，然后为当前 DOM 节点加入子节点。
+  - 当新节点没有子节点而老节点有子节点的时候，则移除该 DOM 节点的所有子节点。
+  - 当新老节点都无子节点的时候，只是文本的替换。
+- updateChildren
 
 ## 单向数据流
 
@@ -83,6 +101,8 @@ vue 2.0 版本使用的是 Object.defineProperty 方法。
 唯一标记，diff 操作可以更准确、更快速。
 
 ## keep-alive 原理
+
+todo
 
 ## Proxy 与 Object.defineProperty 对比
 

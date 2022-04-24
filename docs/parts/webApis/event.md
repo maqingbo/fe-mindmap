@@ -37,6 +37,8 @@ btn.onclick = function() {
 
 DOM2 Events 为事件处理程序的赋值和移除定义了两个方法： `addEventListener()` 和 `removeEventListener()`。这两个方法暴露在所有 DOM 节点上，它们接收 3 个参数：事件名、事件处理函数和一个布尔值， true 表示在捕获阶段调用事件处理程序， false（默认值）表示在冒泡阶段调用事件处理程序。
 
+注意：DOM2 级的事件名称不是以 `on` 开头的！
+
 ```js
 let btn = document.getElementById("myBtn");
 btn.addEventListener("click", () => {

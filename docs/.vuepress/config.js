@@ -11,6 +11,10 @@ module.exports = {
   },
   plugins: ['@vuepress/medium-zoom'],
   themeConfig: {
+    nav: [
+      { text: 'GitHub', link: 'https://github.com/maqingbo/fe-mindmap' }
+    ],
+    logo: '/images/chameleon.png',
     displayAllHeaders: false,
     lastUpdated: '上次更新',
     sidebarDepth: 2,
@@ -65,7 +69,8 @@ module.exports = {
           ['/parts/webApis/DOM', 'DOM'],
           ['/parts/webApis/event', '事件'],
           ['/parts/webApis/BOM', 'BOM'],
-          ['/parts/webApis/ajax', 'Ajax'],
+          ['/parts/webApis/XHR', 'XMLHttpRequest'],
+          ['/parts/webApis/formData', 'FormData'],
           ['/parts/webApis/storage', '本地存储'],
           ['/parts/webApis/WebGL', 'WebGL']
         ]
@@ -82,12 +87,20 @@ module.exports = {
         ]
       },
       {
+        title: '小程序',
+        collapsable: false,
+        children: [
+          ['/parts/miniProgram/', '收集箱']
+        ]
+      },
+      {
         title: '网络通信',
         collapsable: false,
         children: [
           ['/parts/network/', '收集箱'],
           ['/parts/network/protocol', '网络协议'],
           ['/parts/network/http', 'HTTP'],
+          ['/parts/network/http2', 'HTTP 2.0'],
           ['/parts/network/security', '网络安全'],
         ]
       },
@@ -139,6 +152,13 @@ module.exports = {
           ['/parts/design/paradigm', '编程范式'],
           ['/parts/design/pattern', '设计模式'],
           ['/parts/design/method', '设计方法']
+        ]
+      },
+      {
+        title: '业务相关',
+        collapsable: false,
+        children: [
+          ['/parts/business/', '收集箱']
         ]
       }
     ]
