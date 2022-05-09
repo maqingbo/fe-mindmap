@@ -51,6 +51,8 @@ module.exports = {
         children: [
           ['/parts/javascript/inBox', '收集箱'],
           ['/parts/javascript/overView', '概念'],
+          ['/parts/javascript/dataType', '数据类型'],
+          ['/parts/javascript/builtIn', '内置对象'],
           ['/parts/javascript/execution', 'JS 执行过程'],
           ['/parts/javascript/closure', '闭包'],
           ['/parts/javascript/function', '函数'],

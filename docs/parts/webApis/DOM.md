@@ -8,7 +8,7 @@ DOM 模型用一个树结构来表示一个文档，树的每个分支的终点�
 
 ## 历史
 
-DOM 曾经使用 Level 来命名，一直到 Level 3，标准文件维护在 [w3c 网站](https://www.w3.org/TR/?title=dom)。Level 4 时修改为 DOM Stand，维护在 [WHATWG 网站](https://dom.spec.whatwg.org/)。
+DOM 曾经使用 Level 来命名，一直到 Level 3，标准文件维护在 [w3c 网站](https://www.w3.org/TR/?title=dom)。Level 4 时修改为 DOM Standard，维护在 [WHATWG 网站](https://dom.spec.whatwg.org/)。
 
 ![](../../images/web-api/DOM-Level.png)
 
