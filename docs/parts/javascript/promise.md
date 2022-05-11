@@ -182,8 +182,24 @@ class PromiseAPlus {
 }
 ```
 
+## async / await
+
+async/await 其实是 Generator 的语法糖，它能实现的效果都能用 then 链来实现，目的是为了优化 then 链，以同步的形式来写异步逻辑。顾名思义，async 用于声明一个方法是异步的，而 await 用于等待一个异步方法执行完成。
+
+async 函数可能包含 0 个或者多个 await 表达式。await 表达式会暂停整个 async 函数的执行进程并出让其控制权，只有当其等待的基于 promise 的异步操作被兑现或被拒绝之后才会恢复进程。promise 的解决值会被当作该 await 表达式的返回值。使用 async / await 关键字就可以在异步代码中使用普通的 try / catch 代码块。
+
+async 函数会返回一个 Promise 对象，如果在函数中 return 一个直接量，async 会把这个直接量通过 Promise.resolve() 封装成 Promise 对象。没有返回值的时候，它会返回 Promise.resolve(undefined)。
+
+**对比 Promise 的优势**
+
+- 代码更接近于同步代码的写法，
+- 可以更优雅的传递中间值
+- 错误处理更友好，可以使用 try/catch
+- 更友好的调试，调试器只能追踪同步代码，无法进入 then 内部
+
 ## 参考
 
 - [Promise/async/Generator 实现原理解析](https://juejin.cn/post/6844904096525189128)
 - [Promise 之你看得懂的 Promise](https://juejin.cn/post/6844903629187448845)
 - [Callbacks Vs Promises and basics of JS](https://theflyingmantis.medium.com/callbacks-vs-promises-and-basics-of-js-80d3d1515e81)
+- [实现一个基础的 Promise](https://segmentfault.com/a/1190000023180502)
