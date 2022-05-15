@@ -160,7 +160,8 @@ module.exports = {
         title: '业务相关',
         collapsable: false,
         children: [
-          ['/parts/business/', '收集箱']
+          ['/parts/business/', '收集箱'],
+          ['/parts/business/gis', 'Web GIS']
         ]
       }
     ]
