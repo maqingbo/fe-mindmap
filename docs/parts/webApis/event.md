@@ -121,7 +121,7 @@ document.body.onclick = function(event) {
     - CompositionEvent
   - MessageEvent
   - SVGEvent
-  - ...（不一一列出，可参考 [MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/Event#%E5%9F%BA%E4%BA%8E_event_%E7%9A%84%E6%8E%A5%E5%8F%A3)）
+  - ...（全部事件列表可参考 [MDN](https://developer.mozilla.org/en-US/docs/Web/API/Event#interfaces_based_on_event)）
 
 我们可以尝试给页面上的一个 input 元素绑定一个 focus 事件，打印一下 event 对象：
 

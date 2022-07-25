@@ -20,6 +20,10 @@ Three.js 常见功能：
 - 为三维场景添加高级的后期处理效果
 - 创建点云（粒子系统）
 
+## Canvas
+
+https://stackoverflow.com/questions/15558418/how-do-you-save-an-image-from-a-three-js-canvas
+
 ## 3D 美术知识
 
 使用 Three.js 开发 3D 程序需要两方面的核心知识：
