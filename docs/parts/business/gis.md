@@ -2,6 +2,8 @@
 
 Cesium 是一个 web 端的三维地图开发框架，涉及三个知识领域 : Web 前端、计算机图形学、地理信息系统（GIS）。
 
+有点类似于 Three.js，本质上也是对 WebGL 的封装，只是更专业于地图业务。
+
 ![](../../images/business/gis-01.jpg)
 
 ## 功能简介
