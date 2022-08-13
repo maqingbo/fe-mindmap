@@ -20,23 +20,25 @@ Three.js 常见功能：
 - 为三维场景添加高级的后期处理效果
 - 创建点云（粒子系统）
 
-## 3D 美术知识
+Three.js 优缺点：
+
+- Three.js 擅长 WebGL 场景渲染，作为 JS 类库特别原生、灵活、自由度高。
+- Three.js 不擅长物理碰撞，因此不适合开发 3D 游戏。
+
+## Canvas 元素
+
+todo
+
+https://stackoverflow.com/questions/15558418/how-do-you-save-an-image-from-a-three-js-canvas
+
+## 核心知识分类
 
 使用 Three.js 开发 3D 程序需要两方面的核心知识：
 
 - 3D 美术知识：相机、光源、mesh、geomerty、material 等等，这些知识不止在 3D 程序中会用到，建模等场景也会使用，基础美术能力决定了你对 3D 的了解。计算机图形学也是用的这一套，可能会加入一些数学方面的知识。
 - JS 编程能力：知道如何使用 JS 进行面向对象编程，构建程序的时候，如何做到清晰的模块化，代码该如何组织，数据和视图如何绑定等等。
 
-下面是 3D 美术中的一些基础知识：
-
-1. **场景 (Scene)**：是物体、光源等元素的容器，可以配合 chrome 插件使用，抛出 window.scene 即可实时调整 obj 的信息和材质信息；
-2. **相机 (Camera)**：场景中的相机，代替人眼去观察，场景中只能添加一个；
-4. **物体对象 (Mesh)**：包括二维物体（点、线、面）、三维物体，模型等等；
-5. **光源 (Light)**：场景中的光照，如果不添加光照场景将会是一片漆黑，包括全局光、平行光、点光源等；
-6. **渲染器 (Renderer)**: 场景的渲染方式，如 webGL\canvas2D\Css3D；
-7. **控制器 (Control)**: 可通过键盘、鼠标控制相机的移动
-
-## 对应的 Three.js 中的功能
+## 技术关键词
 
 ### 场景 (Scene)
 
@@ -44,13 +46,15 @@ Three.js 常见功能：
 
 ### 相机 (Camera)
 
-threejs 中常用的相机有两种，透视相机和正交相机：
+场景中的相机，代替人眼去观察，场景中只能添加一个。
+
+three.js 中常用的相机有两种，透视相机和正交相机：
 
 **透视相机 (PerspectiveCamera)**
 
 模拟人眼，近大远小，更适合 3D 渲染；
 
-我们在创建透视相机的时候，需要定义一个视锥 (Frustum)，随后在渲染的时候，计算机会将视锥中的所有三维物体投影到我们的二维屏幕上。
+我们在创建透视相机的时候，需要定义一个**视锥 (Frustum)**，随后在渲染的时候，计算机会将视锥中的所有三维物体投影到我们的二维屏幕上。
 
 ![](../../images/web-api/webgl/frustum-1.png)
 
@@ -64,13 +68,37 @@ threejs 中常用的相机有两种，透视相机和正交相机：
 
 ![](../../images/web-api/webgl/frustum-3.png)
 
-### 物体对象 (Mesh)
+### 物体对象
 
-在计算机的世界里，一条弧线是由有限个点构成的有限条线段连接得到的。当线段数量越多，长度就越短，当达到你无法察觉这是线段时，一条平滑的弧线就出现了。 计算机的三维模型也是类似的。只不过线段变成了平面，空间中确定一个平面最少需要三个点，所以普遍用三角形组成的网格来描述。我们把这种模型称之为 Mesh 模型。
+包括二维物体（点、线、面）、三维物体，模型等等。
 
-在 threejs 中，Mesh = Geometry （几何体） + Material （材质） 。Geometry 就好像是骨架，材质则类似于皮肤。
+在计算机的世界里，一条弧线是由有限个点构成的有限条线段连接得到的。当线段数量越多，长度就越短，当达到你无法察觉这是线段时，一条平滑的弧线就出现了。 计算机的三维模型也是类似的。只不过线段变成了平面，空间中确定一个平面最少需要三个点，所以普遍用三角形组成的网格来描述。我们把这种模型称之为**网格 (Mesh) 模型**。
 
-threejs 中内置了许多基本的几何图元 (Primitives)，命名全部以`Geometry`结尾，我们可以使用这些图元快速创建常见的 Geometry：
+![](../../images/web-api/webgl/stanford-bunny.jpg)
+
+_计算机图形学中著名的斯坦福兔子_
+
+**网格 (Mesh)**
+
+在 three.js 中，Mesh = 几何体 (Geometry) + 材质 (Material) 。
+
+网格包含的内容为：几何体、几何体的材质、几何体的自身网格坐标体系。
+
+同一个材质和几何体可以被多个网格对象使用。
+
+一个场景可以同时添加多个网格。
+
+**几何体 (Geometry)**
+
+顾名思义，几何体用来表现物体的**形状**。例如 球体、立方体、平面、以及自定义的几何体（汽车、动物、房子、数目等）。
+
+在 Three.js 中，一个几何体的来源有 3 个：
+
+- Three.js 中内置的一些基本几何体
+- 自己创建自定义的几何体
+- 通过文件加载进来的几何体
+
+three.js 中内置了许多基本的几何图元 (Primitives)，命名全部以`Geometry`结尾，我们可以使用这些图元快速创建常见的 Geometry：
 
 | 名称                | 类型   |
 | ------------------- | ------ |
@@ -82,23 +110,37 @@ threejs 中内置了许多基本的几何图元 (Primitives)，命名全部以`G
 | TetrahedronGeometry | 四面体 |
 | TorusGeometry       | 圆环体 |
 
-Material 代表三维物体的材质，不同的材质在光照下会呈现不一样的效果，通过材质，我们可以给物体设置不同的颜色、光泽度、贴图等等。
+**材质 (Material)**
 
-同样的，threejs 中内置了一些常用的材质函数：
+Material 代表三维物体的材质，材质表示的是物体对光照的反应，表示除了形状以外所有可视属性的集合，例如色彩、纹理、光滑度、透明度、反射率、折射率、发光度等。
 
-| 名称                 | 类型                         |
-| -------------------- | ---------------------------- |
-| PointsMaterial       | 点                           |
-| LineBasicMaterial    | 实线                         |
-| LineDashedMaterial   | 虚线                         |
-| MeshBasicMaterial    | 基础网格                     |
-| MeshPhongMaterial    | Phong 网格（镜面高光）       |
-| MeshLambertMaterial  | Lambert 网格（非镜面高光）   |
-| MeshStandardMaterial | 标准物理网格（逼真，耗性能） |
-| MeshPhysicalMaterial | 物理网格（逼真，耗性能）     |
-| MeshToonMaterial     | 卡通效果                     |
+同样的，three.js 中内置了一些常用的材质函数：
+
+| 名称                 | 类型                                     |
+| -------------------- | ---------------------------------------- |
+| PointsMaterial       | 点                                       |
+| LineBasicMaterial    | 实线                                     |
+| LineDashedMaterial   | 虚线                                     |
+| MeshBasicMaterial    | 基础网格（不反射光，显示材质本身的颜色） |
+| MeshPhongMaterial    | Phong 网格（镜面高光）                   |
+| MeshLambertMaterial  | Lambert 网格（非镜面高光）               |
+| MeshStandardMaterial | 标准物理网格（逼真，耗性能）             |
+| MeshPhysicalMaterial | 物理网格（逼真，耗性能）                 |
+| MeshToonMaterial     | 卡通效果                                 |
+
+**纹理 (Texture)**
+
+纹理可以简单理解为一种图像或一张图片，用来包裹到几何体表面上。
+
+纹理来源可以是：
+
+- 通过文件加载进来
+- 在画布上生成
+- 由另外一个场景渲染出
 
 ### 光源 (Light)
+
+场景中的光照，如果不添加光照场景将会是一片漆黑。
 
 | 名称             | 类型          |
 | ---------------- | ------------- |
@@ -111,7 +153,11 @@ Material 代表三维物体的材质，不同的材质在光照下会呈现不�
 
 ### 渲染器 (Renderer)
 
-webGL 最常用。
+场景的渲染方式，如 webGL\canvas2D\Css3D，webGL 最常用。
+
+### 控制器 (Control)
+
+可通过键盘、鼠标控制相机的移动。
 
 ## Three.js 中的其他功能
 
@@ -136,3 +182,4 @@ todo
 - [DirectX 和 OpenGL - 极客湾](https://www.youtube.com/watch?v=3OYNerkxI-U&ab_channel=%E6%9E%81%E5%AE%A2%E6%B9%BEGeekerwan)
 - [快速上手 Three.js - 奇乐编程学院](https://www.bilibili.com/video/BV1zU4y1L7Go?spm_id_from=333.999.0.0)
 - [puxiao - Github](https://github.com/puxiao/threejs-tutorial)
+- [知乎专栏](https://zhuanlan.zhihu.com/p/27296011)
