@@ -85,19 +85,133 @@ style: 第三方组件库自定义样式抽离为单独的全局文件。
 
 ## 技术栈
 
+- Node 版本：建议 16.16.0，同时建议使用 nvm 管理 node 版本（旧项目使用的是 14.20.0）.
+- 包管理工具：建议 yarn.
+- Lint 工具：ESLint.
+- 前端框架：Vue
+  - Vue 2.x
+    - UI 框架：若依
+    - 组件库：[Element-ui 2.15.10](https://element.eleme.io/#/zh-CN/component/installation)
+    - 路由：[vue-router 3.x](https://v3.router.vuejs.org/zh/)
+    - 状态管理：[vuex 3.x](https://v3.vuex.vuejs.org/zh/)
+    - 构建工具：[Vue Cli](https://cli.vuejs.org/zh/)
+  - Vue 3.x
+    - UI 框架：若依
+    - 组件库：[Element-plus](https://element.eleme.io/#/zh-CN/component/installation)
+    - 路由：[vue-router 4.x](https://router.vuejs.org/zh/)
+    - 状态管理：[pinia](https://pinia.vuejs.org/zh/index.html)
+    - 构建工具：[Vite](https://cn.vitejs.dev/guide/)
+
 ## 项目组织规范
 
 ## 编码规范
+
+统一的编码规范对团队项目的长远维护不无裨益。一致性的代码规范可以增强团队开发协作效率、提高代码质量、减少遗留系统维护的负担。
+
+推荐选择社区沉淀下来的规范和 Lint 工具。
+
 ### JavaScript
+
+- 规范：[JavaScript Standard Style](https://standardjs.com/readme-zhcn.html#why-should-i-use-javascript-standard-style)。
+- Lint 工具：[ESLint](https://cn.eslint.org/)。
+
+以上两项可在项目初始化时按照以下步骤配置：
+
+```bash
+npx eslint --init
+```
+
+init 时会显示以下信息，按步骤操作即可。init 完成后根目录下自动生成 eslintrc.js 文件。
+
+```
+You can also run this command directly using 'npm init @eslint/config'.
+Need to install the following packages:
+  @eslint/create-config
+Ok to proceed? (y) y
+√ How would you like to use ESLint? · style
+√ What type of modules does your project use? · esm
+√ Which framework does your project use? · vue
+√ Does your project use TypeScript? · No / Yes
+√ Where does your code run? · browser, node
+√ How would you like to define a style for your project? · guide
+√ Which style guide do you want to follow? · standard
+√ What format do you want your config file to be in? · JavaScript
+Checking peerDependencies of eslint-config-standard@latest
+The config that you've selected requires the following dependencies:
+
+eslint-plugin-vue@latest eslint-config-standard@latest eslint@^8.0.1 eslint-plugin-import@^2.25.2 eslint-plugin-n@^15.0.0 eslint-plugin-promise@^6.0.0
+√ Would you like to install them now? · No / Yes
+√ Which package manager do you want to use? · yarn
+```
+
+下一步，根目录下手动创建 .eslintignore 文件，添加如下代码：
+
+```
+/node_modules
+/bin
+/dist
+```
+
+下一步，vscode 中安装 eslint 插件，插件作者 "Microsoft"。
+
+安装成功后，去 vscode 配置信息中添加一行：
+
+```json
+ "eslint.validate": ["javascript", "javascriptreact", "vue"]
+```
+
+此时如果允许命令行方式执行 eslint lint 是可以检查代码的，但是 vscode 中还不自动提示错误，因为 vue 中的 js 是包裹在 `<script>` 标签中的，需要安装 eslint-plugin-html 插件。
+
+```
+yarn add eslint-plugin-html -D
+```
+
+配置完毕。
+
 ### HTML
+
 ### CSS
+
+- vue 组件内 css 必须添加 scoped 属性！
+- 涉及到第三方组件库的样式修改，使用统一的全局样式文件，或 scoped 内使用 deep 修改，不可以在组件内使用全局 style 修改！
+- 第三方组件库深色模式，使用 Element-ui 的主题定制。
+
 ### 代码格式化
+
+- [Prettier](https://prettier.io/)：HTML、CSS、JS、Markdown 全部搞定，VScode 安装插件即可。
+
 ### 框架风格指南
+
+- Vue 最佳实践：[style guide](https://vue.docschina.org/v2/style-guide/)，强烈建议遵循所有！
+- 使用路由，不要全部都是 v-if 来显隐组件！
+- 使用状态管理，不要全部使用自定义事件来进行传参，真的很混乱！
 
 ## 文档规范
 
+没有文档的几大弊端，主要是接口文档：
+
+- 接口文档
+  - 接口分类不清晰，哪些接口是干啥的全靠猜；
+  - 有没有现成的接口不知道，也不能挨个试，只能新增，造成代码冗余；
+  - 前后端协同不顺畅，互相甩锅，不利于项目推进和团队氛围；
+- 项目文档
+  - 对项目的情况、配置、代码的整体架构和逻辑不清晰
+- 需求文档
+  - 没有明确的需求的话，就不能够确定代码该怎么写
+
 ### 建立文档中心
+
+- 方式一：成套商业方案——飞书云文档、石墨文档、腾讯文档、WPS。
+  - 优势：模板多，可以满足多样化的文档处理需求，且非开发人员使用起来也方便；
+  - 劣势：毕竟第三方服务，数据是否可完整导出？
+- 方式二：Git 仓库 + Markdown 文件
+  - 所有项目的所有文档都放置在一个 git 版本库下，按文件夹分类整理。
+  - 优势：历史记录跟踪、版本化、问题讨论、权限管理等
+  - 劣势：纯文本，不能满足多样化的文档处理需求，比如思维导图、图表、表格、PPT；对非开发人员不太友好。
+
 ### 文档格式/模板
+
+如何写好文档，很难通过标准或规范来进行约束，因为主观性比较强。大部分情况下，我们可以为不同类型的文档提供一个模板，通过模板来说明一个文档需要包含哪些内容，对文档的编写者进行引导。
 
 ## 前后端协作规范
 
