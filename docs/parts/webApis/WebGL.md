@@ -1,5 +1,16 @@
 ## 历史
 
+总体来说，3D 渲染迭代路线分成了两种技术方案：Native 和 Web。
+
+- Native （电脑、手机等，直接调用操作系统的图形 API、显卡驱动的计算能力）
+  - OpenGL：1992 年，Khronos 发布，最新版本为 2017 年的 4.6；
+  - OpenGL ES：Khronos 发布，基于 OpenGL，适用于手机、游戏主机等设备；
+  - Vulkan：2015 年，Khronos 发布，全新架构的现代图形 API，能够充分利用现代显卡的能力；
+  - Direct3D：1996 年，微软发布；
+  - Metal：苹果公司2014年发布，能充分发挥苹果 A 系列处理器效能；
+- Web （通过浏览器，在网页中实现渲染）
+  - WebGL：基于 OpenGL ES，适用于浏览器内 3D 渲染；
+
 之前的三维程序都是运行在 OpenGL 和微软公司的 DirectX 上的，PC 端大型游戏都是在此基础上开发的。随着移动技术的发展，手机上有了许多使用三维程序的场景，所以 OpenGL 标准委员会就在之前的 OpenGL 基础上开发了一个缩减版的 OpenGL 叫做 OpenGL ES，目前智能手机操作系统都是基于 OpenGL ES 来开发三维程序的。
 
 同时为了能在浏览器上运行三维程序，就在 OpenGL ES 2.0 的基础上开发出了 WebGL 标准，把 JavaScript 和 OpenGL ES 2.0 绑定起来。WebGL 可以为 HTML5-Canvas 提供硬件 3D 加速渲染，这样 Web 开发人员就可以借助系统显卡来在浏览器里更流畅的展示 3D 场景和模型了。
